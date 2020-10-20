@@ -55,7 +55,6 @@ public class VentanaPrincipal extends JFrame {
 			btnVentas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					VentanaVentas.run(db);
-					dispose();
 				}
 			});
 			btnVentas.setBounds(315, 256, 169, 87);
@@ -72,7 +71,6 @@ public class VentanaPrincipal extends JFrame {
 			btnPresupuesto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					VentanaPresupuestos.run(db);
-					dispose();
 				}
 			});
 			btnPresupuesto.setBounds(279, 97, 240, 87);
