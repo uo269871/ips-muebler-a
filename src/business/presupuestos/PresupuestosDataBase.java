@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,8 @@ public class PresupuestosDataBase {
 				String client_id = rs.getString("client_id");
 				String presupuesto_id = rs.getString("PRESUPUESTO_ID");
 				Presupuesto pr = new Presupuesto(fecha, presupuesto_id, client_id);
-				presupuestos.add(pr);
+				if(Date.valueOf(LocalDate.now()).before(fecha))
+					presupuestos.add(pr);
 			}
 			rs.close();
 			st.close();
@@ -105,13 +107,13 @@ public class PresupuestosDataBase {
 	public void eliminarPresupuesto(String id) {
 		try {
 			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("delete from ips_presupuestos where id_presupuesto = " + id);
+			ResultSet rs = st.executeQuery("delete from ips_presupuestos_productos where presupuesto_id = " + id);
 
 			rs.close();
 			st.close();
 			
 			st = db.getConnection().createStatement();
-			rs = st.executeQuery("delete from ips_presupuestos_productos where id_presupuesto = " + id);
+			rs = st.executeQuery("delete from ips_presupuestos where presupuesto_id = " + id);
 			
 			
 			db.cierraConexion();
@@ -124,7 +126,7 @@ public class PresupuestosDataBase {
 		ArrayList<String> productos = new ArrayList<String>();
 		try {
 			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_PRESUPUESTOS WHERE PRESUPUESTO_ID = " + presupuesto_id);
+			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_PRESUPUESTOS_PRODUCTOS WHERE PRESUPUESTO_ID = " + presupuesto_id);
 			while (rs.next()) {
 				String id = rs.getString("product_id");
 				productos.add(id);

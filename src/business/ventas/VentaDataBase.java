@@ -24,7 +24,9 @@ public class VentaDataBase{
 		try {
 			Statement st = db.getConnection().createStatement();
 			ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM  IPS_VENTAS");
-			aux = rs.last() ? rs.getRow() : 0;
+			if(rs.next()) {
+				aux = rs.getInt(1);
+			}
 			rs.close();
 			st.close();
 			db.cierraConexion();
@@ -40,7 +42,7 @@ public class VentaDataBase{
 					"insert into ips_ventas(venta_id,client_id,fecha_entrega) values (?,?,?)");
 			pst.setString(1, v.getVenta_Id());
 			pst.setString(2, v.getClient_Id());
-			pst.setDate(4, v.getFechaEntrega());
+			pst.setDate(3, v.getFechaEntrega());
 			pst.executeUpdate();
 
 			pst.close();

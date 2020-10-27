@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Vector;
 
@@ -130,7 +131,10 @@ public class VentanaVentas extends JFrame {
 			for(int i =0;i<presupuestos.size();i++) {
 				String nombre = cdb.getCliente(presupuestos.get(i).getClient_id());
 				table.setValueAt(nombre, i, 0);
-				table.setValueAt(presupuestos.get(i).getFecha_caducidad(),i, 1);
+				Date date = presupuestos.get(i).getFecha_caducidad();
+				LocalDate d = date.toLocalDate();
+				d = d.minusDays(15);
+				table.setValueAt(d.toString(),i, 1);
 			}
 		}
 		return table;
@@ -242,7 +246,8 @@ public class VentanaVentas extends JFrame {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		VentaDataBase vdb = new VentaDataBase(db);
 		int id = vdb.getNumeroVentas() + 1;
-		Presupuesto p = presupuestos.get(table.getSelectedRow());
+		int pos = table.getSelectedRow();
+		Presupuesto p = presupuestos.get(pos);
 		Venta v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
 		List<String> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
 		List<Integer> transporte = pdb.getTransportes(p.getPresupuesto_id());
