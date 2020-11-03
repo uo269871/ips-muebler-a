@@ -222,8 +222,6 @@ public class VentanaPresupuestos extends JFrame {
 							v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getType());
 							v.add(String.valueOf(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
 							modeloTablePresupesto.addRow(v);
-							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 3);
-							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 4);
 							presupuesto.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]));
 						}
 					actualizaPrecio();
@@ -308,16 +306,6 @@ public class VentanaPresupuestos extends JFrame {
 		int id=1;
 		List<Integer> transporte = new ArrayList<Integer>();
 		List<Integer> montaje = new ArrayList<Integer>();
-		for (int i = 0; i < modeloTablePresupesto.getRowCount(); i++) {
-			if (modeloTablePresupesto.getValueAt(i, 3).toString().toUpperCase() == "SI")
-				transporte.add(1);
-			else
-				transporte.add(0);
-			if (modeloTablePresupesto.getValueAt(i, 4).toString().toUpperCase() == "SI")
-				montaje.add(1);
-			else
-				montaje.add(0);
-		}
 		if(presupuestos.size()>0) {
 			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
 			id++;
@@ -436,8 +424,6 @@ public class VentanaPresupuestos extends JFrame {
 			v.add("Nombre");
 			v.add("Tipo");
 			v.add("Precio");
-			v.add("Transporte");
-			v.add("Montar");
 			modeloTablePresupesto = new DefaultTableModel(v,presupuesto.size()) {
 
 			    /**
@@ -448,9 +434,6 @@ public class VentanaPresupuestos extends JFrame {
 				@Override
 			    public boolean isCellEditable(int row, int column) {
 			       //all cells false
-					if (column == 3)
-						return true;
-					else
 				   return false;
 			    }
 			};
