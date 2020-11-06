@@ -597,8 +597,8 @@ public class VentanaPresupuestos extends JFrame {
 			float min = Float.parseFloat(JOptionPane.showInputDialog(null, "Ponga el precio mínimo"));
 			float max = Float.parseFloat(JOptionPane.showInputDialog(null, "Ponga el precio máximo"));
 
-			while (max < min) {
-				max = Integer.parseInt(JOptionPane.showInputDialog(null, "Ponga el precio máximo"));
+			if(max < min) {
+				return;
 			}
 
 			catalogoPrecios = cdb.getProductosFiltroPrecios(min, max);

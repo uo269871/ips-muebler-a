@@ -25,7 +25,9 @@ public class VentaDataBase{
 		try {
 			Statement st = db.getConnection().createStatement();
 			ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM  IPS_VENTAS");
-			aux = rs.last() ? rs.getRow() : 0;
+			if(rs.next()) {
+				aux = rs.getInt(1);
+			}
 			rs.close();
 			st.close();
 			db.cierraConexion();
@@ -41,7 +43,7 @@ public class VentaDataBase{
 					"insert into ips_ventas(venta_id,client_id,fecha_entrega) values (?,?,?)");
 			pst.setString(1, v.getVenta_Id());
 			pst.setString(2, v.getClient_Id());
-			pst.setDate(4, v.getFechaEntrega());
+			pst.setDate(3, v.getFechaEntrega());
 			pst.executeUpdate();
 
 			pst.close();
@@ -82,6 +84,26 @@ public class VentaDataBase{
 		
 		return ventas.get(ventas.size()-1);
 		
+	}
+
+	public List<Venta> getVentas() {
+		List<Venta> ventas = new ArrayList<Venta>();
+		try {
+			Statement pst = db.getConnection().createStatement();
+			ResultSet rs = pst.executeQuery("select * from ips_ventas");
+			while(rs.next()) {
+				String venta_id = rs.getString("venta_id");
+				String client_id = rs.getString("client_id");
+				Date fecha = rs.getDate("fecha_entrega");
+				Venta v = new Venta(venta_id, client_id, fecha);
+				ventas.add(v);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ventas;
 	}
 	
 	public List<Producto> getProductos(String id) {

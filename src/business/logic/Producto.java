@@ -87,4 +87,7 @@ public class Producto {
 		return "Nombre: " + getName() + ", Tipo: " + getType() +", Precio: " + getPrice();
 	}
 
+	public boolean equals(Producto p) {
+		return p.getProduct_id().equals(this.getProduct_id());
+	}	
 }
