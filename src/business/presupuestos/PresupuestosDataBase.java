@@ -87,13 +87,9 @@ public class PresupuestosDataBase {
 			int i = 0;
 			for (Producto product : productos) {
 				pst = db.getConnection().prepareStatement(
-						"insert into ips_presupuestos_productos(presupuesto_id,product_id,recoger,montar) values (?,?,?,?)");
+						"insert into ips_presupuestos_productos(presupuesto_id,product_id) values (?,?)");
 				pst.setString(1, presupuesto.getPresupuesto_id());
 				pst.setString(2, product.getProduct_id());
-				pst.setInt(3, transporte.get(i));
-				pst.setInt(4, montaje.get(i));
-				pst.executeUpdate();
-
 				pst.close();
 				db.cierraConexion();
 				i++;
@@ -158,21 +154,4 @@ public class PresupuestosDataBase {
 		return productos;
 	}
 	
-	public List<Integer> getMontajes(String presupuesto_id) {
-		ArrayList<Integer> productos = new ArrayList<Integer>();
-		try {
-			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_PRESUPUESTOS_PRODUCTOS WHERE PRESUPUESTO_ID = " + presupuesto_id);
-			while (rs.next()) {
-				int recoger = rs.getInt("montar");
-				productos.add(recoger);
-			}
-			rs.close();
-			st.close();
-			db.cierraConexion();
-		} catch (SQLException e) {
-			System.out.println("Error while operating the database " + e.getMessage());
-		}
-		return productos;
-	}
 }
