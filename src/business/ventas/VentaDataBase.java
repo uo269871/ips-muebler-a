@@ -62,7 +62,7 @@ public class VentaDataBase{
 				i++;
 			}
 		} catch (SQLException e) {
-			System.out.println("Error while operating the database " + e.getMessage());
+			System.out.println("Error while operating the database  " + e.getMessage());
 		}
 	}
 	
