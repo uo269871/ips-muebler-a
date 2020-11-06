@@ -86,5 +86,25 @@ public class VentaDataBase{
 		return ventas.get(ventas.size()-1);
 		
 	}
+
+	public List<Venta> getVentas() {
+		List<Venta> ventas = new ArrayList<Venta>();
+		try {
+			Statement pst = db.getConnection().createStatement();
+			ResultSet rs = pst.executeQuery("select * from ips_ventas");
+			while(rs.next()) {
+				String venta_id = rs.getString("venta_id");
+				String client_id = rs.getString("client_id");
+				Date fecha = rs.getDate("fecha_entrega");
+				Venta v = new Venta(venta_id, client_id, fecha);
+				ventas.add(v);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ventas;
+	}
 	
 }

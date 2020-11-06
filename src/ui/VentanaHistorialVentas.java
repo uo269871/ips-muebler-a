@@ -1,14 +1,20 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import business.bbdd.DataBase;
+import business.logic.Venta;
+import business.ventas.VentaDataBase;
 
 public class VentanaHistorialVentas extends JFrame {
 
@@ -19,26 +25,24 @@ public class VentanaHistorialVentas extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaHistorialVentas frame = new VentanaHistorialVentas();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	private List<Venta> ventas;
+	private DefaultTableModel modeloTableVenta;
+	private DataBase db;
+
+	public void run(DataBase db) {
+		try {
+			VentanaHistorialVentas frame = new VentanaHistorialVentas(db);
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 
 	/**
 	 * Create the frame.
 	 */
-	public VentanaHistorialVentas() {
+	public VentanaHistorialVentas(DataBase db) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -46,6 +50,7 @@ public class VentanaHistorialVentas extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
+		this.db = db;
 	}
 
 	private JPanel getPanelCentro() {
@@ -57,12 +62,14 @@ public class VentanaHistorialVentas extends JFrame {
 		}
 		return panelCentro;
 	}
+
 	private JLabel getLblHistorial() {
 		if (lblHistorial == null) {
-			lblHistorial = new JLabel("New label");
+			lblHistorial = new JLabel("Historia de ventas");
 		}
 		return lblHistorial;
 	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
@@ -70,9 +77,18 @@ public class VentanaHistorialVentas extends JFrame {
 		}
 		return scrollPane;
 	}
+
 	private JTable getTable() {
 		if (table == null) {
 			table = new JTable();
+			VentaDataBase vdb = new VentaDataBase(db);
+			
+			List<Venta> lista = vdb.getVentas();
+			
+			Vector<String> v = new Vector<String>();
+			v.add("Id de la venta");
+			v.add("Fecha de la venta");
+			v.add("Cuantía de la venta");
 		}
 		return table;
 	}
