@@ -51,7 +51,7 @@ public class VentaDataBase{
 			int i = 0;
 			for (String s : productos) {
 				pst = db.getConnection().prepareStatement(
-						"insert into ips_ventas_productos(venta_id,product_id) values (?,?)");
+						"insert into ips_ventas_productos(venta_id,product_id,recoger,montar) values (?,?,?,?)");
 				pst.setString(1, v.getVenta_Id());
 				pst.setString(2, s);
 				pst.setInt(3, transporte.get(i));
@@ -80,7 +80,6 @@ public class VentaDataBase{
 				ventas.add(v);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -101,7 +100,6 @@ public class VentaDataBase{
 				ventas.add(v);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -128,7 +126,6 @@ public class VentaDataBase{
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return productos;
