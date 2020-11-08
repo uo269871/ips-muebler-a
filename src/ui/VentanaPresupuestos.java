@@ -304,16 +304,14 @@ public class VentanaPresupuestos extends JFrame {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		List<Presupuesto> presupuestos = pdb.getPresupuestos();
 		int id=1;
-		List<Integer> transporte = new ArrayList<Integer>();
-		List<Integer> montaje = new ArrayList<Integer>();
 		if(presupuestos.size()>0) {
 			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
 			id++;
 		}
 		if(cliente!=null) {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), cliente.getClient_id()),presupuesto,transporte,montaje);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), cliente.getClient_id()),presupuesto);
 		}else {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto,transporte,montaje);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto);
 		}
 	}
 

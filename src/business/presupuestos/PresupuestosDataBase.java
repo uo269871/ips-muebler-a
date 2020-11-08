@@ -73,7 +73,7 @@ public class PresupuestosDataBase {
 		return presupuestos;
 	}
 
-	public boolean addPresupuesto(Presupuesto presupuesto, List<Producto> productos, List<Integer> transporte, List<Integer> montaje) {
+	public boolean addPresupuesto(Presupuesto presupuesto, List<Producto> productos) {
 		try {
 			PreparedStatement pst = db.getConnection().prepareStatement(
 					"insert into ips_presupuestos(fecha_caducidad,presupuesto_id,client_id) values (?,?,?)");
@@ -87,9 +87,12 @@ public class PresupuestosDataBase {
 			int i = 0;
 			for (Producto product : productos) {
 				pst = db.getConnection().prepareStatement(
-						"insert into ips_presupuestos_productos(presupuesto_id,product_id) values (?,?)");
+						"insert into ips_presupuestos_productos(presupuesto_id,product_id,unidades) values (?,?,?)");
 				pst.setString(1, presupuesto.getPresupuesto_id());
 				pst.setString(2, product.getProduct_id());
+				pst.setInt(3, 1);
+				pst.executeUpdate();
+				
 				pst.close();
 				db.cierraConexion();
 				i++;

@@ -39,7 +39,6 @@ public class VentanaVentas extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private DataBase db;
-	private Transportista tr;
 	private DefaultTableModel modeloTablePresupesto;
 	private List<Presupuesto> presupuestos;
 	private JPanel panelCentro;
@@ -146,7 +145,7 @@ public class VentanaVentas extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					
 					aceptarPresupuesto();
-					//ejecutarVentanaTransporte();
+					ejecutarVentanaTransporte();
 				}
 			});	
 			btnAceptar.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -183,16 +182,7 @@ public class VentanaVentas extends JFrame {
         jch.setEditable(true);
         jcmin.setEditable(true);
         
-        aceptar.addActionListener(new ActionListener() {
-        	@SuppressWarnings("deprecation")
-			public void actionPerformed(ActionEvent e) { 
-        	    elegirTransportista((int)jch.getSelectedItem(),(int)jcmin.getSelectedItem());
-        	    TransportesDataBase tdb = new TransportesDataBase(db);
-        	    VentaDataBase vdb = new VentaDataBase(db);
-        	    tdb.addTransportes(new Transporte(Integer.toString(vdb.getNumeroVentas() + 1), vdb.getUltimaVenta().getVenta_Id(), tr.getDni(), new Date((int)jcy.getSelectedItem(), (int)jcm.getSelectedItem(), (int)jcd.getSelectedItem()), (int)jch.getSelectedItem(),(int)jcmin.getSelectedItem()));
-        	    dispose();
-        	  } 
-        });
+       
 
         //create a JOptionPane
         Object[] options = new Object[] {};
@@ -241,7 +231,7 @@ public class VentanaVentas extends JFrame {
         
         aceptar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) { 
-        		tr = (Transportista) trans.getSelectedItem();
+        		
         	  } 
         });
 	}
