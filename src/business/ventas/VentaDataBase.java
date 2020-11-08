@@ -121,5 +121,28 @@ public class VentaDataBase{
 		}
 		return productos;
 	}
+	
+	public boolean isMontado(String ventaId, String productId) {
+		boolean b = false;
+		try {
+			PreparedStatement pst = db.getConnection()
+					.prepareStatement("select montar from ips_ventas_productos where venta_id = ? and product_id = ?");
+			pst.setString(1, ventaId);
+			pst.setString(2, productId);
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				if(rs.getInt(1) == 1) {
+					b = true;
+				}
+			}
+			db.cierraConexion();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return b;
+	}
 
 }

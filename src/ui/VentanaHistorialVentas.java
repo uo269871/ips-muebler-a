@@ -120,6 +120,9 @@ public class VentanaHistorialVentas extends JFrame {
 		
 		for(Producto p: productos) {
 			precio += p.getPrice();
+			if(vdb.isMontado(id, p.getProduct_id())) {
+				precio += 5;
+			}
 		}
 		return precio;
 	}

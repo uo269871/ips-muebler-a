@@ -25,9 +25,10 @@ import javax.swing.table.DefaultTableModel;
 
 import business.bbdd.DataBase;
 import business.clientes.ClientesDataBase;
-import business.logic.*;
+import business.logic.Presupuesto;
+import business.logic.Transportista;
+import business.logic.Venta;
 import business.presupuestos.PresupuestosDataBase;
-import business.transportes.TransportesDataBase;
 import business.transportistas.TransportistasDataBase;
 import business.ventas.VentaDataBase;
 

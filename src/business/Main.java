@@ -4,6 +4,7 @@
 package business;
 
 import business.bbdd.DataBase;
+import ui.VentanaHistorialVentas;
 import ui.VentanaPrincipal;
 
 /**
@@ -18,6 +19,7 @@ public class Main {
 	public static void main(String[] args) {
 		DataBase db=new DataBase(2);
 		VentanaPrincipal.run(db);
+		VentanaHistorialVentas.run(db);
 	}
 
 }
