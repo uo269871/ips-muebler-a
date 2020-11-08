@@ -38,6 +38,7 @@ public class VentaDataBase {
 	}
 
 	public void addVenta(Venta v, List<String> productos) {
+
 		try {
 			PreparedStatement pst = db.getConnection()
 					.prepareStatement("insert into ips_ventas(venta_id,client_id,fecha_entrega) values (?,?,?)");
@@ -55,13 +56,14 @@ public class VentaDataBase {
 				pst.setString(2, s);
 				pst.setInt(3, 0);
 				pst.setInt(4, 0);
+
 				pst.executeUpdate();
 
 				pst.close();
 				db.cierraConexion();
 			}
 		} catch (SQLException e) {
-			System.out.println("Error while operating the database " + e.getMessage());
+			System.out.println("Error while operating the database  " + e.getMessage());
 		}
 	}
 
