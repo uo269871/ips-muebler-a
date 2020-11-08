@@ -76,7 +76,7 @@ public class VentaDataBase{
 				String venta_id = rs.getString("venta_id");
 				String client_id = rs.getString("client_id");
 				Date fecha = rs.getDate("fecha_entrega");
-				Venta v = new Venta(venta_id, client_id, fecha);
+				Venta v = new Venta(client_id, venta_id, fecha);
 				ventas.add(v);
 			}
 			db.cierraConexion();

@@ -95,7 +95,7 @@ public class VentanaTransporte extends JFrame {
 
 	private void cargarProductos() {
 		VentaDataBase vdb = new VentaDataBase(db);
-		productos = vdb.getProductos("4");
+		productos = vdb.getProductos(venta.getVenta_Id());
 	}
 
 	private JPanel getPanelNorte() {
