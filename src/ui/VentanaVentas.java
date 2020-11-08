@@ -254,7 +254,9 @@ public class VentanaVentas extends JFrame {
 		Presupuesto p = presupuestos.get(pos);
 		Venta v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
 		List<String> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
-		vdb.addVenta(v, products);
+		List<Integer> transporte = pdb.getTransportes(p.getPresupuesto_id());
+		List<Integer> montaje = pdb.getTransportes(p.getPresupuesto_id());
+		vdb.addVenta(v, products,transporte,montaje);
 		pdb.eliminarPresupuesto(p.getPresupuesto_id());
 	}
 }
