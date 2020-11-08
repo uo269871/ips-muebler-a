@@ -85,11 +85,12 @@ public class PresupuestosDataBase {
 			int i = 0;
 			for (Producto product : productos) {
 				pst = db.getConnection().prepareStatement(
-						"insert into ips_presupuestos_productos(presupuesto_id,product_id,recoger,montar) values (?,?,?,?)");
+						"insert into ips_presupuestos_productos(presupuesto_id,product_id,recoger,montar,unidades) values (?,?,?,?,?)");
 				pst.setString(1, presupuesto.getPresupuesto_id());
 				pst.setString(2, product.getProduct_id());
 				pst.setInt(3, transporte.get(i));
 				pst.setInt(4, montaje.get(i));
+				pst.setInt(5, product.getUds());
 				pst.executeUpdate();
 
 				pst.close();

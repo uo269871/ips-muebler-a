@@ -123,23 +123,27 @@ public class DataBase {
 		    st.close();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
-		} catch(FileNotFoundException e) {
-			//System.out.println("File not found " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
-	private void ejecutarFicheroDatos(String fileName, Statement st) throws IOException, SQLException {
-		  String ruta="sqls/";
-		  ruta+=fileName;
-	      String cadena;
-	      FileReader f = new FileReader(ruta);
-	      BufferedReader b = new BufferedReader(f);
-	      while((cadena = b.readLine())!=null) {
-	          st.executeUpdate(cadena);
-	      }
-	      b.close();
+	private void ejecutarFicheroDatos(String fileName, Statement st) throws SQLException, IOException{
+		String ruta="sqls/";
+		ruta+=fileName;
+	    String cadena;
+	    FileReader f;
+	    try {
+			f = new FileReader(ruta);
+		
+			BufferedReader b = new BufferedReader(f);
+	      	while((cadena = b.readLine())!=null) {
+	          	st.executeUpdate(cadena);
+	      	}
+	      	b.close();
+		} catch (FileNotFoundException e) {
+			
+		}
 	}
 	
 	private String leerFicheroSQL(String fileName) throws FileNotFoundException, IOException {
