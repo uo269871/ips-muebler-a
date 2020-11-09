@@ -76,13 +76,12 @@ public class VentaDataBase{
 				String venta_id = rs.getString("venta_id");
 				String client_id = rs.getString("client_id");
 				Date fecha = rs.getDate("fecha_entrega");
-				Venta v = new Venta(venta_id, client_id, fecha);
+				Venta v = new Venta(client_id, venta_id, fecha);
 				ventas.add(v);
 			}
 			db.cierraConexion();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error while operating the database " + e.getMessage());
 		}
 
 		return ventas;
@@ -112,14 +111,32 @@ public class VentaDataBase{
 					Producto p = new Producto(name, type, s, price);
 					productos.add(p);
 				}
+				pst.close();
 				db.cierraConexion();
 
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error while operating the database " + e.getMessage());
 		}
 		return productos;
+	}
+	
+	public void updateTransporteMontaje(Producto producto, Venta venta, int transporte, int montaje) {
+		try {
+			PreparedStatement pst = db.getConnection()
+					.prepareStatement("update ips_ventas_productos set recoger = ?, montar = ? where product_id = ? and venta_id = ?");
+			pst.setInt(1, transporte);
+			pst.setInt(2, montaje);
+			pst.setString(3, producto.getProduct_id());
+			pst.setString(4, venta.getVenta_Id());
+			
+			pst.executeQuery();
+			
+			pst.close();
+			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
 	}
 
 }

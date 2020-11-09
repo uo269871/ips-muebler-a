@@ -76,5 +76,10 @@ public class Transportista {
 	public void setMinuto_salida(int minuto_salida) {
 		this.minuto_salida = minuto_salida;
 	}
+	
+	@Override
+	public String toString() {
+		return dni + " " + nombre;
+	}
 
 }

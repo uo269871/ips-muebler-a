@@ -1,7 +1,9 @@
 package business.transportes;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import business.bbdd.DataBase;
 import business.logic.Transporte;
@@ -35,6 +37,23 @@ public class TransportesDataBase {
 		}
 		return true;
 		
+	}
+	
+	public int getNumeroTransportes() {
+		int aux = 0;
+		try {
+			Statement st = db.getConnection().createStatement();
+			ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM  IPS_TRANSPORTES");
+			if (rs.next()) {
+				aux = rs.getInt(1);
+			}
+			rs.close();
+			st.close();
+			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return aux;
 	}
 
 }
