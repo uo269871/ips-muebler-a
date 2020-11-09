@@ -57,5 +57,4 @@ public class Presupuesto {
 	protected void setClient_id(String client_id) {
 		this.client_id = client_id;
 	}
-
 }

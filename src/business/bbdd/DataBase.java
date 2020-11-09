@@ -127,23 +127,22 @@ public class DataBase {
 		}
 	}
 
-	private void ejecutarFicheroDatos(String fileName, Statement st) throws IOException, SQLException {
-		String ruta = "sqls/";
-		ruta += fileName;
-		String cadena;
-		FileReader f;
-		try {
+	private void ejecutarFicheroDatos(String fileName, Statement st) throws SQLException, IOException{
+		String ruta="sqls/";
+		ruta+=fileName;
+	    String cadena;
+	    FileReader f;
+	    try {
 			f = new FileReader(ruta);
-
+		
 			BufferedReader b = new BufferedReader(f);
-			while ((cadena = b.readLine()) != null) {
-				st.executeUpdate(cadena);
-			}
-			b.close();
+	      	while((cadena = b.readLine())!=null) {
+	          	st.executeUpdate(cadena);
+	      	}
+	      	b.close();
 		} catch (FileNotFoundException e) {
-
+			
 		}
-
 	}
 
 	private String leerFicheroSQL(String fileName) throws FileNotFoundException, IOException {
