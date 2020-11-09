@@ -78,6 +78,11 @@ public class Transporte {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+	
+	@Override
+	public String toString() {
+		return "Transporte: " + id_transporte + ", venta: " + id_venta;
+	}
 
 
 }

@@ -396,6 +396,11 @@ public class VentanaMontar extends JFrame {
 	private JComboBox<Integer> getCbMes() {
 		if (cbMes == null) {
 			cbMes = new JComboBox<Integer>();
+			cbMes.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					cbDia.setModel(new DefaultComboBoxModel<Integer>(getDias()));
+				}
+			});
 			cbMes.setModel(new DefaultComboBoxModel<Integer>(getMeses()));
 		}
 		return cbMes;

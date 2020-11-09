@@ -22,6 +22,7 @@ import business.bbdd.DataBase;
 import business.logic.Producto;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
 
 public class VentanaAlmacen extends JFrame {
 
@@ -47,7 +48,7 @@ public class VentanaAlmacen extends JFrame {
 	 * Launch the application.
 	 */
 
-	public void run(DataBase db) {
+	public static void run(DataBase db) {
 		try {
 			VentanaAlmacen frame = new VentanaAlmacen(db);
 			frame.setVisible(true);
@@ -165,6 +166,7 @@ public class VentanaAlmacen extends JFrame {
 	private JPanel getPanelBtnsAlmacen() {
 		if (panelBtnsAlmacen == null) {
 			panelBtnsAlmacen = new JPanel();
+			panelBtnsAlmacen.setLayout(new GridLayout(0, 1, 0, 0));
 			panelBtnsAlmacen.add(getBtnSalir());
 		}
 		return panelBtnsAlmacen;
