@@ -134,7 +134,7 @@ public class VentanaClientes extends JFrame {
 			btnGuardar = new JButton("Guardar");
 			btnGuardar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(getTableCliente().getSelectedRow()>0) {
+					if(getTableCliente().getSelectedRow()>=0) {
 						vp.setCliente(clientes.get(getTableCliente().getSelectedRow()));
 					}else {
 						vp.setCliente(null);

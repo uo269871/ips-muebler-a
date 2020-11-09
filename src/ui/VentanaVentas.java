@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,7 +39,6 @@ public class VentanaVentas extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private DataBase db;
-	private Transportista tr;
 	private DefaultTableModel modeloTablePresupesto;
 	private List<Presupuesto> presupuestos;
 	private JPanel panelCentro;
@@ -130,7 +130,10 @@ public class VentanaVentas extends JFrame {
 			for(int i =0;i<presupuestos.size();i++) {
 				String nombre = cdb.getCliente(presupuestos.get(i).getClient_id());
 				table.setValueAt(nombre, i, 0);
-				table.setValueAt(presupuestos.get(i).getFecha_caducidad(),i, 1);
+				Date date = presupuestos.get(i).getFecha_caducidad();
+				LocalDate d = date.toLocalDate();
+				d = d.minusDays(15);
+				table.setValueAt(d.toString(),i, 1);
 			}
 		}
 		return table;
@@ -142,7 +145,7 @@ public class VentanaVentas extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					
 					aceptarPresupuesto();
-					elegirTransporte();
+					ejecutarVentanaTransporte();
 				}
 			});	
 			btnAceptar.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -150,6 +153,10 @@ public class VentanaVentas extends JFrame {
 			btnAceptar.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnAceptar;
+	}
+	
+	private void ejecutarVentanaTransporte() {
+		VentanaTransporte.run(db);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -175,16 +182,7 @@ public class VentanaVentas extends JFrame {
         jch.setEditable(true);
         jcmin.setEditable(true);
         
-        aceptar.addActionListener(new ActionListener() {
-        	@SuppressWarnings("deprecation")
-			public void actionPerformed(ActionEvent e) { 
-        	    elegirTransportista((int)jch.getSelectedItem(),(int)jcmin.getSelectedItem());
-        	    TransportesDataBase tdb = new TransportesDataBase(db);
-        	    VentaDataBase vdb = new VentaDataBase(db);
-        	    tdb.addTransportes(new Transporte(Integer.toString(vdb.getNumeroVentas() + 1), vdb.getUltimaVenta().getVenta_Id(), tr.getDni(), new Date((int)jcy.getSelectedItem(), (int)jcm.getSelectedItem(), (int)jcd.getSelectedItem()), (int)jch.getSelectedItem(),(int)jcmin.getSelectedItem()));
-        	    dispose();
-        	  } 
-        });
+       
 
         //create a JOptionPane
         Object[] options = new Object[] {};
@@ -233,7 +231,7 @@ public class VentanaVentas extends JFrame {
         
         aceptar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) { 
-        		tr = (Transportista) trans.getSelectedItem();
+        		
         	  } 
         });
 	}
@@ -242,12 +240,11 @@ public class VentanaVentas extends JFrame {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		VentaDataBase vdb = new VentaDataBase(db);
 		int id = vdb.getNumeroVentas() + 1;
-		Presupuesto p = presupuestos.get(table.getSelectedRow());
-		Venta v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
+		int pos = table.getSelectedRow();
+		Presupuesto p = presupuestos.get(pos);
+		Venta v = new Venta(String.valueOf(id), p.getClient_id(), new Date(System.currentTimeMillis()));
 		List<String> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
-		List<Integer> transporte = pdb.getTransportes(p.getPresupuesto_id());
-		List<Integer> montaje = pdb.getTransportes(p.getPresupuesto_id());
-		vdb.addVenta(v, products,transporte,montaje);
+		vdb.addVenta(v, products);
 		pdb.eliminarPresupuesto(p.getPresupuesto_id());
 	}
 }
