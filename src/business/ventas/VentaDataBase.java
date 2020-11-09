@@ -12,7 +12,7 @@ import business.bbdd.DataBase;
 import business.logic.Producto;
 import business.logic.Venta;
 
-public class VentaDataBase {
+public class VentaDataBase{
 
 	private DataBase db;
 
@@ -25,7 +25,7 @@ public class VentaDataBase {
 		try {
 			Statement st = db.getConnection().createStatement();
 			ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM  IPS_VENTAS");
-			if (rs.next()) {
+			if(rs.next()) {
 				aux = rs.getInt(1);
 			}
 			rs.close();
@@ -66,7 +66,7 @@ public class VentaDataBase {
 			System.out.println("Error while operating the database  " + e.getMessage());
 		}
 	}
-
+	
 	public List<Venta> getVentas() {
 		List<Venta> ventas = new ArrayList<Venta>();
 		try {

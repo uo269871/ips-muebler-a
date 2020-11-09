@@ -7,7 +7,7 @@ public class Venta {
 	private String venta_Id;
 	private Date fechaEntrega;
 
-	public Venta(String client_Id, String venta_Id, Date fechaEntrega) {
+	public Venta(String venta_Id, String client_Id, Date fechaEntrega) {
 		setClient_Id(client_Id);
 		setVenta_Id(venta_Id);
 		setFechaEntrega(fechaEntrega);
