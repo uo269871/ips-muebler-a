@@ -10,6 +10,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
+import business.empleados.EmpleadosDataBase;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -250,14 +252,16 @@ public class VentanaAñadir extends JFrame {
 	}
 	
 	private void añadirEmpleado() {
-		String name = getTxtNombre().getText() + " " + getTxtApellidos().getText();
-		String dir = getTxtDireccion().getText();
-		String dni = getTxtDni().getText();
-		
-		try {
-			
-		} catch(Exception e) {
-			
-		}
+		EmpleadosDataBase edb = new EmpleadosDataBase(db);
+		edb.getEmpleados();
+//		String name = getTxtNombre().getText() + " " + getTxtApellidos().getText();
+//		String dir = getTxtDireccion().getText();
+//		String dni = getTxtDni().getText();
+//		
+//		try {
+//			
+//		} catch(Exception e) {
+//			
+//		}
 	}
 }

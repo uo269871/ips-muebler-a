@@ -7,8 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -23,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 
 import business.bbdd.DataBase;
 import business.logic.Pedido;
-import business.logic.Producto;
 import business.pedidos.PedidosDataBase;
 import util.Claves;
 /**

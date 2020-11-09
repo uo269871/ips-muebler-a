@@ -78,7 +78,7 @@ public class VentanaVendedor extends JFrame {
 			btnHistorialDeVentas = new JButton("Historial de ventas");
 			btnHistorialDeVentas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaVentas.run(db);
+					VentanaHistorialVentas.run(db);
 				}
 			});
 			btnHistorialDeVentas.setBounds(142, 135, 165, 20);

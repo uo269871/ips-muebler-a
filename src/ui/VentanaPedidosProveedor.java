@@ -21,16 +21,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import business.bbdd.DataBase;
 import business.logic.Pedido;
-import business.logic.Producto;
 import business.pedidos.PedidosDataBase;
 import util.Claves;
-
-import javax.swing.ListSelectionModel;
 /**
  * @author UO270656
  *  DNI 71732222Y

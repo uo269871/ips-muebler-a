@@ -54,7 +54,7 @@ public class VentanaPrincipal extends JFrame {
 			btnVentas = new JButton("Realizar venta");
 			btnVentas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaVentas.run(db);
+//					VentanaVentas.run(db);
 				}
 			});
 			btnVentas.setBounds(315, 256, 169, 87);
