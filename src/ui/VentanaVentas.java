@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -19,12 +20,18 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import business.almacen.AlmacenDataBase;
 import business.bbdd.DataBase;
+import business.catalogo.CatalogoDataBase;
 import business.clientes.ClientesDataBase;
+import business.logic.Pedido;
 import business.logic.Presupuesto;
+import business.logic.Producto;
 import business.logic.Venta;
+import business.pedidos.PedidosDataBase;
 import business.presupuestos.PresupuestosDataBase;
 import business.ventas.VentaDataBase;
+import util.Claves;
 
 public class VentanaVentas extends JFrame {
 
@@ -165,9 +172,40 @@ public class VentanaVentas extends JFrame {
 		int id = vdb.getNumeroVentas() + 1;
 		int pos = table.getSelectedRow();
 		Presupuesto p = presupuestos.get(pos);
-		v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
-		List<String> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
+		v = new Venta(Claves.toClave(id),p.getClient_id(), new Date(System.currentTimeMillis()));
+		List<Producto> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
 		vdb.addVenta(v, products);
+		modificarAlmacen(products,id);
 		pdb.eliminarPresupuesto(p.getPresupuesto_id());
+	}
+	
+	private void modificarAlmacen(List<Producto> products, int id) {
+		List<Producto> productosAAñadir=new ArrayList<Producto>();
+		AlmacenDataBase adb= new AlmacenDataBase(db);
+		CatalogoDataBase cdb=new CatalogoDataBase(db);
+		PedidosDataBase pdb = new PedidosDataBase(db);
+		for(Producto p:products) {
+			int uds=adb.getUnidades(p.getProduct_id());
+			if(uds-p.getUds()<0) {
+				adb.addAlmacenProducto(p, 0);
+				int unidadesAPedir=p.getUds()-uds;
+				p=cdb.getProductoById(p.getProduct_id());
+				p.setUds(unidadesAPedir);
+				if(p!=null) {
+					productosAAñadir.add(p);
+				}
+			}else {
+				adb.addAlmacenProducto(p, uds-p.getUds());
+			}
+		}
+		if(productosAAñadir.size()>0) {
+			int amount=0;
+			for(Producto aux:productosAAñadir) {
+				amount+=aux.getUds()*aux.getPrice();
+			}
+			int id_pedido=pdb.getPedidos().size()+1;
+			Pedido pedido= new Pedido(id_pedido, amount, "ENCARGADO PARA V:"+Claves.toClave(id), productosAAñadir);
+			pdb.addPedido(pedido);
+		}
 	}
 }

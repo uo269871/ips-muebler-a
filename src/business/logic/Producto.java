@@ -13,6 +13,7 @@ public class Producto {
 	private String type;
 	private String product_id;
 	private float price;
+	private int uds;
 	
 	public Producto(String name, String type, String product_id, float price) {
 		super();
@@ -20,6 +21,16 @@ public class Producto {
 		this.type = type;
 		this.product_id = product_id;
 		this.price = price;
+	}
+	
+	public Producto(String name, String type, String product_id, float price,int uds) {
+		this(name,type,product_id,price);
+		this.uds=uds;
+	}
+	
+	public Producto(Producto pr,int uds) {
+		this(pr.name,pr.type,pr.product_id,pr.price);
+		this.uds=uds;
 	}
 
 	public Producto() {
@@ -55,39 +66,77 @@ public class Producto {
 	}
 
 	/**
+	 * @return the uds
+	 */
+	public int getUds() {
+		return uds;
+	}
+
+	/**
+	 * @param uds the uds to set
+	 */
+	public void setUds(int uds) {
+		this.uds = uds;
+	}
+
+	/**
 	 * @param name the name to set
 	 */
-	protected void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	protected void setType(String type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
 	 * @param product_id the product_id to set
 	 */
-	protected void setProduct_id(String product_id) {
+	public void setProduct_id(String product_id) {
 		this.product_id = product_id;
 	}
 
 	/**
 	 * @param price the price to set
 	 */
-	protected void setPrice(float price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 
 	@Override
 	public String toString() {
-		return "Nombre: " + getName() + ", Tipo: " + getType() +", Precio: " + getPrice();
+		return "Nombre: " + getName() + ", Tipo: " + getType() +", Precio: " + getPrice() + ", Uds: "+getUds();
 	}
 
-	public boolean equals(Producto p) {
-		return p.getProduct_id().equals(this.getProduct_id());
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + Float.floatToIntBits(price);
+		result = prime * result + ((product_id == null) ? 0 : product_id.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + uds;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Producto other = (Producto) obj;
+		if (product_id.equals(other.product_id))
+			return true;
+		else
+			return false;
 	}	
 }

@@ -37,7 +37,7 @@ public class VentaDataBase{
 		return aux;
 	}
 
-	public void addVenta(Venta v, List<String> productos) {
+	public void addVenta(Venta v, List<Producto> productos) {
 
 		try {
 			PreparedStatement pst = db.getConnection()
@@ -49,13 +49,14 @@ public class VentaDataBase{
 
 			pst.close();
 			db.cierraConexion();
-			for (String s : productos) {
+			for (Producto s : productos) {
 				pst = db.getConnection().prepareStatement(
-						"insert into ips_ventas_productos(venta_id,product_id, recoger, montar) values (?,?,?,?)");
+						"insert into ips_ventas_productos(venta_id,product_id, recoger, montar,unidades) values (?,?,?,?,?)");
 				pst.setString(1, v.getVenta_Id());
-				pst.setString(2, s);
+				pst.setString(2, s.getProduct_id());
 				pst.setInt(3, 0);
 				pst.setInt(4, 0);
+				pst.setInt(5, s.getUds());
 
 				pst.executeUpdate();
 

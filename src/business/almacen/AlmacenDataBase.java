@@ -39,7 +39,7 @@ public class AlmacenDataBase {
 			try {
 				PreparedStatement pst = db.getConnection()
 						.prepareStatement("update ips_almacen_producto set unidades = ? where product_id = ?");
-				pst.setInt(1, getUnidades(pr.getProduct_id()) + uds);
+				pst.setInt(1, uds);
 				pst.setString(2, pr.getProduct_id());
 				
 				pst.executeUpdate();

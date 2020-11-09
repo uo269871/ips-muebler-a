@@ -23,8 +23,8 @@ import oracle.jdbc.pool.OracleDataSource;
 public class DataBase {
 
 	final static String DB_URL = "jdbc:oracle:thin:@156.35.94.99:1521:DESA";
-	final static String DB_USER = "UO269871";
-	final static String DB_PASSWORD = "kubaja14";
+	final static String DB_USER = "UO270656";
+	final static String DB_PASSWORD = "nerobe44";
 
 	final static int BASE_VACIA = 0;
 	final static int BASE_RELLENA_DEFECTO = 1;
@@ -127,23 +127,22 @@ public class DataBase {
 		}
 	}
 
-	private void ejecutarFicheroDatos(String fileName, Statement st) throws IOException, SQLException {
-		String ruta = "sqls/";
-		ruta += fileName;
-		String cadena;
-		FileReader f;
-		try {
+	private void ejecutarFicheroDatos(String fileName, Statement st) throws SQLException, IOException{
+		String ruta="sqls/";
+		ruta+=fileName;
+	    String cadena;
+	    FileReader f;
+	    try {
 			f = new FileReader(ruta);
-
+		
 			BufferedReader b = new BufferedReader(f);
-			while ((cadena = b.readLine()) != null) {
-				st.executeUpdate(cadena);
-			}
-			b.close();
+	      	while((cadena = b.readLine())!=null) {
+	          	st.executeUpdate(cadena);
+	      	}
+	      	b.close();
 		} catch (FileNotFoundException e) {
-
+			
 		}
-
 	}
 
 	private String leerFicheroSQL(String fileName) throws FileNotFoundException, IOException {
