@@ -2,10 +2,28 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
@@ -19,28 +37,12 @@ import business.transportes.TransportesDataBase;
 import business.transportistas.TransportistasDataBase;
 import business.ventas.VentaDataBase;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import javax.swing.JScrollPane;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JTable;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.sql.Date;
-import java.awt.event.ActionEvent;
-
 public class VentanaMontar extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panelNorte;
 	private JLabel lblMontar;
@@ -64,7 +66,6 @@ public class VentanaMontar extends JFrame {
 	private JLabel lblMes;
 	private JComboBox<Integer> cbMes;
 	private JLabel lblAño;
-	private JTextField txAño;
 	private JLabel lblHora;
 	private JComboBox<Integer> cbHora;
 	private JLabel lblMinuto;
@@ -78,6 +79,7 @@ public class VentanaMontar extends JFrame {
 	private Venta venta;
 	private DefaultTableModel modeloTableTransporte;
 	private DefaultTableModel modeloTableMontaje;
+	private JSpinner spAño;
 
 
 	/**
@@ -100,7 +102,7 @@ public class VentanaMontar extends JFrame {
 		this.transportes = transportes;
 		this.venta = venta;
 		this.montajes = new ArrayList<Producto>();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 815, 485);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -247,6 +249,7 @@ public class VentanaMontar extends JFrame {
 	private JPanel getPanelBtnTransporte() {
 		if (panelBtnTransporte == null) {
 			panelBtnTransporte = new JPanel();
+			panelBtnTransporte.setLayout(new GridLayout(0, 1, 0, 0));
 			panelBtnTransporte.add(getBtnAddMonatje());
 		}
 		return panelBtnTransporte;
@@ -254,6 +257,7 @@ public class VentanaMontar extends JFrame {
 	private JPanel getPanelBtnMontaje() {
 		if (panelBtnMontaje == null) {
 			panelBtnMontaje = new JPanel();
+			panelBtnMontaje.setLayout(new GridLayout(0, 1, 0, 0));
 			panelBtnMontaje.add(getBtnDelMontaje());
 		}
 		return panelBtnMontaje;
@@ -328,8 +332,9 @@ public class VentanaMontar extends JFrame {
 	private JPanel getPanelFecha() {
 		if (panelFecha == null) {
 			panelFecha = new JPanel();
+			panelFecha.setLayout(new GridLayout(0, 10, 0, 0));
 			panelFecha.add(getLblAño());
-			panelFecha.add(getTxAño());
+			panelFecha.add(getSpAño());
 			panelFecha.add(getLblMes());		
 			panelFecha.add(getCbMes());
 			panelFecha.add(getLblDia());
@@ -344,6 +349,7 @@ public class VentanaMontar extends JFrame {
 	private JLabel getLblDia() {
 		if (lblDia == null) {
 			lblDia = new JLabel("D\u00EDa");
+			lblDia.setHorizontalAlignment(SwingConstants.CENTER);
 			lblDia.setFont(new Font("Dialog", Font.BOLD, 14));
 		}
 		return lblDia;
@@ -382,6 +388,7 @@ public class VentanaMontar extends JFrame {
 	private JLabel getLblMes() {
 		if (lblMes == null) {
 			lblMes = new JLabel("Mes");
+			lblMes.setHorizontalAlignment(SwingConstants.CENTER);
 			lblMes.setFont(new Font("Dialog", Font.BOLD, 14));
 		}
 		return lblMes;
@@ -404,20 +411,15 @@ public class VentanaMontar extends JFrame {
 	private JLabel getLblAño() {
 		if (lblAño == null) {
 			lblAño = new JLabel("A\u00F1o");
+			lblAño.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAño.setFont(new Font("Dialog", Font.BOLD, 14));
 		}
 		return lblAño;
 	}
-	private JTextField getTxAño() {
-		if (txAño == null) {
-			txAño = new JTextField();
-			txAño.setColumns(10);
-		}
-		return txAño;
-	}
 	private JLabel getLblHora() {
 		if (lblHora == null) {
 			lblHora = new JLabel("Hora");
+			lblHora.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHora.setFont(new Font("Dialog", Font.BOLD, 14));
 		}
 		return lblHora;
@@ -441,6 +443,7 @@ public class VentanaMontar extends JFrame {
 	private JLabel getLblMinuto() {
 		if (lblMinuto == null) {
 			lblMinuto = new JLabel("Minuto");
+			lblMinuto.setHorizontalAlignment(SwingConstants.CENTER);
 			lblMinuto.setFont(new Font("Dialog", Font.BOLD, 14));
 		}
 		return lblMinuto;
@@ -464,6 +467,7 @@ public class VentanaMontar extends JFrame {
 	private JPanel getPanelBtnSur() {
 		if (panelBtnSur == null) {
 			panelBtnSur = new JPanel();
+			panelBtnSur.setLayout(new GridLayout(0, 1, 0, 0));
 			panelBtnSur.add(getBtnSiguiente());
 		}
 		return panelBtnSur;
@@ -472,6 +476,7 @@ public class VentanaMontar extends JFrame {
 		if (btnSiguiente == null) {
 			btnSiguiente = new JButton("Siguiente");
 			btnSiguiente.addActionListener(new ActionListener() {
+				@SuppressWarnings("deprecation")
 				public void actionPerformed(ActionEvent e) {
 					Transportista[] transportistas = getTransportistas();
 					JFrame frame = new JFrame("Input Dialog Example 3");
@@ -479,7 +484,7 @@ public class VentanaMontar extends JFrame {
 					TransportesDataBase tdb = new TransportesDataBase(db);
 					VentaDataBase vdb = new VentaDataBase(db);
 					int id = tdb.getNumeroTransportes() + 1;
-					Transporte transporte = new Transporte(String.valueOf(id), venta.getVenta_Id(), tr.getDni(), new Date(Integer.parseInt(txAño.getText()), (int)cbMes.getSelectedItem(), (int)cbDia.getSelectedItem()), (int)cbHora.getSelectedItem(), (int)cbMinuto.getSelectedItem());
+					Transporte transporte = new Transporte(String.valueOf(id), venta.getVenta_Id(), tr.getDni(), new Date((int)getSpAño().getValue(), (int)cbMes.getSelectedItem(), (int)cbDia.getSelectedItem()), (int)cbHora.getSelectedItem(), (int)cbMinuto.getSelectedItem(), "PENDIENTE");
 					tdb.addTransportes(transporte);
 					for (Producto p : transportes) {
 						vdb.updateTransporteMontaje(p, venta, 1, 0);
@@ -503,5 +508,12 @@ public class VentanaMontar extends JFrame {
 		List<Transportista> trs = tdb.getTranspotista((int)cbHora.getSelectedItem(), (int)cbMinuto.getSelectedItem());
 		Transportista[] transportistas = trs.toArray(new Transportista[trs.size()]);
 		return transportistas;
+	}
+	private JSpinner getSpAño() {
+		if (spAño == null) {
+			spAño = new JSpinner();
+			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(2020), 0, null, Integer.valueOf(50)));
+		}
+		return spAño;
 	}
 }

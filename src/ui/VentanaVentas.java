@@ -10,13 +10,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,10 +21,9 @@ import javax.swing.table.DefaultTableModel;
 
 import business.bbdd.DataBase;
 import business.clientes.ClientesDataBase;
-import business.logic.*;
+import business.logic.Presupuesto;
+import business.logic.Venta;
 import business.presupuestos.PresupuestosDataBase;
-import business.transportes.TransportesDataBase;
-import business.transportistas.TransportistasDataBase;
 import business.ventas.VentaDataBase;
 
 public class VentanaVentas extends JFrame {

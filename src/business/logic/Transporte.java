@@ -10,8 +10,9 @@ public class Transporte {
 	private Date dia_entrega;
 	private int hora_entrega;
 	private int minuto_entrega;
+	private String estado;
 	
-	public Transporte(String id_transporte,String id_venta, String dni_transportista, Date dia_entrega, int hora_entrega,int minuto_entrega) {
+	public Transporte(String id_transporte,String id_venta, String dni_transportista, Date dia_entrega, int hora_entrega,int minuto_entrega, String estado) {
 		super();
 		this.setId_transporte(id_transporte);
 		this.setId_venta(id_venta);
@@ -19,6 +20,7 @@ public class Transporte {
 		this.setDia_entrega(dia_entrega);
 		this.setHora_entrega(hora_entrega);
 		this.setMinuto_entrega(minuto_entrega);
+		this.setEstado(estado);
 	}
 
 	public String getId_transporte() {
@@ -67,6 +69,14 @@ public class Transporte {
 
 	public void setMinuto_entrega(int minuto_entrega) {
 		this.minuto_entrega = minuto_entrega;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 

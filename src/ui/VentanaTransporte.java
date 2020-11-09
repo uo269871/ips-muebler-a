@@ -3,6 +3,10 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -21,12 +25,6 @@ import business.bbdd.DataBase;
 import business.logic.Producto;
 import business.logic.Venta;
 import business.ventas.VentaDataBase;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.FlowLayout;
-import javax.swing.JTextField;
 
 public class VentanaTransporte extends JFrame {
 
@@ -77,7 +75,7 @@ public class VentanaTransporte extends JFrame {
 	public VentanaTransporte(DataBase db, Venta venta) {
 		this.db = db;
 		this.venta = venta;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 815, 485);
 		cargarProductos();
 		transportes = new ArrayList<Producto>();
@@ -177,6 +175,7 @@ public class VentanaTransporte extends JFrame {
 	private JPanel getPanelBtnRecoger() {
 		if (panelBtnRecoger == null) {
 			panelBtnRecoger = new JPanel();
+			panelBtnRecoger.setLayout(new GridLayout(0, 1, 0, 0));
 			panelBtnRecoger.add(getBtnAñadirAEntrega());
 		}
 		return panelBtnRecoger;
@@ -185,6 +184,7 @@ public class VentanaTransporte extends JFrame {
 	private JPanel getPanelBtnEntregar() {
 		if (panelBtnEntregar == null) {
 			panelBtnEntregar = new JPanel();
+			panelBtnEntregar.setLayout(new GridLayout(0, 2, 0, 0));
 			panelBtnEntregar.add(getBtnBorrar());
 			panelBtnEntregar.add(getBtnSiguiente());
 		}
