@@ -1,6 +1,8 @@
 package business.logic;
 
 public class Empleado {
+	
+	private String id;
 	private String dni;
 	private String nombre;
 	private String dir;
@@ -10,7 +12,12 @@ public class Empleado {
 	private int hora_salida;
 	private int minuto_salida;
 	
-	public Empleado(String dni, String nombre, String dir, int telefono, int hora_entrada, int minuto_entrada, int hora_salida, int minuto_salida) {
+	public Empleado() {
+		
+	}
+	
+	public Empleado(String id,String dni, String nombre, String dir, int telefono, int hora_entrada, int minuto_entrada, int hora_salida, int minuto_salida) {
+		this.setId(id);
 		this.setDni(dni);
 		this.setNombre(nombre);
 		this.setDir(dir);
@@ -19,6 +26,14 @@ public class Empleado {
 		this.setMinuto_entrada(minuto_entrada);
 		this.setHora_salida(hora_salida);
 		this.setMinuto_salida(minuto_salida);
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	public String getDir() {

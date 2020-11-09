@@ -149,15 +149,10 @@ public class VentanaEmpleados extends JFrame {
 			btnAñadir.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					VentanaAñadir.run(db);
-					añadirEmpleado();
+					dispose();
 				}
 			});
 		}
 		return btnAñadir;
 	}
-
-	private void añadirEmpleado() {
-		
-	}
-	
 }

@@ -70,6 +70,11 @@ public class VentanaVendedor extends JFrame {
 			btnAceptarPresupuesto = new JButton("Aceptar presupuesto");
 			btnAceptarPresupuesto.setBounds(161, 90, 127, 20);
 			btnAceptarPresupuesto.setHorizontalAlignment(SwingConstants.RIGHT);
+			btnAceptarPresupuesto.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaVentas.run(db);
+				}
+			});
 		}
 		return btnAceptarPresupuesto;
 	}

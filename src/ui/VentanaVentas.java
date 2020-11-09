@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import business.bbdd.DataBase;
 import business.clientes.ClientesDataBase;
 import business.logic.Presupuesto;
+import business.logic.Producto;
 import business.logic.Venta;
 import business.presupuestos.PresupuestosDataBase;
 import business.ventas.VentaDataBase;
@@ -167,8 +168,8 @@ public class VentanaVentas extends JFrame {
 		int id = vdb.getNumeroVentas() + 1;
 		int pos = table.getSelectedRow();
 		Presupuesto p = presupuestos.get(pos);
-		v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
-		List<String> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
+		v = new Venta(String.valueOf(id), p.getClient_id(), new Date(System.currentTimeMillis()));
+		List<Producto> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
 		vdb.addVenta(v, products);
 		pdb.eliminarPresupuesto(p.getPresupuesto_id());
 	}

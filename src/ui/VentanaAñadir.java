@@ -1,6 +1,10 @@
 package ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,10 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
 import business.empleados.EmpleadosDataBase;
-
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import business.logic.Empleado;
 
 public class VentanaAñadir extends JFrame {
 
@@ -219,13 +220,12 @@ public class VentanaAñadir extends JFrame {
 		if (comboBox == null) {
 			comboBox = new JComboBox<String>();
 			comboBox.setBounds(82, 183, 101, 20);
-			String[] array = {"Transportista", "Vendedor"};
-//			ComboBoxModel<String> model = new DefaultComboBoxModel<String>(array);
-//			comboBox.setModel(model);
+			String[] array = { "Transportista", "Vendedor" };
 			comboBox.setModel(new DefaultComboBoxModel<String>(array));
 		}
 		return comboBox;
 	}
+
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("A\u00F1adir");
@@ -238,6 +238,7 @@ public class VentanaAñadir extends JFrame {
 		}
 		return btnNewButton;
 	}
+
 	private JButton getBtnVolver() {
 		if (btnVolver == null) {
 			btnVolver = new JButton("Volver");
@@ -250,18 +251,32 @@ public class VentanaAñadir extends JFrame {
 		}
 		return btnVolver;
 	}
-	
+
 	private void añadirEmpleado() {
 		EmpleadosDataBase edb = new EmpleadosDataBase(db);
-		edb.getEmpleados();
-//		String name = getTxtNombre().getText() + " " + getTxtApellidos().getText();
-//		String dir = getTxtDireccion().getText();
-//		String dni = getTxtDni().getText();
-//		
-//		try {
-//			
-//		} catch(Exception e) {
-//			
-//		}
+		Empleado emp = new Empleado();
+		
+		emp.setId(String.valueOf(edb.getEmpleados().size() + 1));
+		emp.setNombre(getTxtNombre().getText() + " " + getTxtApellidos().getText());
+		emp.setDir(getTxtDireccion().getText());
+		emp.setDni(getTxtDni().getText());
+		String horaEnt = getTxtHoraDeEntrada().getText();
+		String horaFin = getTxtHoraDeSalida().getText();
+		if (!horaEnt.contains(":") || !horaFin.contains(":")) {
+			return;
+		}
+		try {
+			emp.setHora_entrada(Integer.parseInt(horaEnt.split(":")[0]));
+			emp.setMinuto_entrada(Integer.parseInt(horaEnt.split(":")[1]));
+			emp.setHora_salida(Integer.parseInt(horaFin.split(":")[0]));
+			emp.setMinuto_salida(Integer.parseInt(horaFin.split(":")[1]));
+			
+			edb.addEmpleado(emp);
+			VentanaEmpleados.run(db);
+			dispose();
+		} catch (Exception e) {
+			
+			return;
+		}
 	}
 }
