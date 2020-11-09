@@ -44,32 +44,32 @@ public class TransportistasDataBase {
 		return empleados;
 	}
 
-	public Transportista[] getTranspotista(int hora, int minuto) {
-		ArrayList<Transportista> transportistas = new ArrayList<Transportista>();
-		try {
-			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_TRANSPORTISTAS" + " WHERE (HORA_ENTRADA < " + hora
-					+ " AND HORA_SALIDA >" + hora + ") OR (HORA_ENTRADA = " + hora + " AND MINUTO_ENTRADA < " + minuto
-					+ ") OR (HORA_SALIDA = " + hora + " AND MINUTO_SALIDA > " + minuto + ")");
-			while (rs.next()) {
-				String dni = rs.getString("dni");
-				String nombre = rs.getString("nombre");
-				int telefono = rs.getInt("telefono");
-				int hora_entrada = rs.getInt("hora_entrada");
-				int minuto_entrada = rs.getInt("minuto_entrada");
-				int hora_salida = rs.getInt("hora_salida");
-				int minuto_salida = rs.getInt("minuto_salida");
-				Transportista tr = new Transportista(dni, nombre, telefono, hora_entrada, minuto_entrada, hora_salida,
-						minuto_salida);
-				transportistas.add(tr);
-			}
-			rs.close();
-			st.close();
-			db.cierraConexion();
-		} catch (SQLException e) {
-			System.out.println("Error while operating the database " + e.getMessage());
-		}
-		return (Transportista[]) transportistas.toArray();
-	}
+	public List<Transportista> getTranspotista(int hora, int minuto) {
+        List<Transportista> transportistas=new ArrayList<Transportista>();
+        try {
+            Statement st = db.getConnection().createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM  IPS_TRANSPORTISTAS"
+                    + " WHERE (HORA_ENTRADA < " + hora + " AND HORA_SALIDA >" + hora
+                    + ") OR (HORA_ENTRADA = " + hora + " AND MINUTO_ENTRADA < " + minuto
+                    + ") OR (HORA_SALIDA = " + hora + " AND MINUTO_SALIDA > " + minuto + ")");
+            while(rs.next()) {
+                String dni=rs.getString("dni");
+                String nombre=rs.getString("nombre");
+                int telefono=rs.getInt("telefono");
+                int hora_entrada=rs.getInt("hora_entrada");
+                int minuto_entrada=rs.getInt("minuto_entrada");
+                int hora_salida=rs.getInt("hora_salida");
+                int minuto_salida=rs.getInt("minuto_salida");
+                Transportista tr= new Transportista(dni,nombre,telefono,hora_entrada,minuto_entrada,hora_salida,minuto_salida);
+                transportistas.add(tr);
+            }
+            rs.close();
+            st.close();
+            db.cierraConexion();
+        }catch(SQLException e){
+            System.out.println("Error while operating the database " + e.getMessage());
+        }
+        return transportistas;
+    }
 
 }
