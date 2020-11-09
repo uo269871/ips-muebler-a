@@ -221,8 +221,27 @@ public class VentanaPresupuestos extends JFrame {
 							v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getName());
 							v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getType());
 							v.add(String.valueOf(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
+							v.add(String.valueOf(1));
 							modeloTablePresupesto.addRow(v);
-							presupuesto.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]));
+//							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 3);
+//							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 4);
+							presupuesto.add(new Producto(catalogo.get(getTableCatalogo().getSelectedRows()[i]),1));
+						}else {
+							for(int j=0;j<modeloTablePresupesto.getRowCount();j++) {
+								if(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getName().equals(modeloTablePresupesto.getValueAt(j, 0))) {
+									Vector<String> v= new Vector<String>();
+									v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getName());
+									v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getType());
+									v.add(String.valueOf(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
+									int uds=Integer.parseInt(modeloTablePresupesto.getValueAt(j, 3).toString())+1;
+									v.add(uds+"");
+									modeloTablePresupesto.removeRow(j);
+									modeloTablePresupesto.addRow(v);
+									Producto pr=new Producto(catalogo.get(getTableCatalogo().getSelectedRows()[i]),uds);
+									presupuesto.remove(pr);
+									presupuesto.add(pr);
+								}
+							}
 						}
 					actualizaPrecio();
 					changeEnableSave();
@@ -240,7 +259,7 @@ public class VentanaPresupuestos extends JFrame {
 	private void actualizaPrecio() {
 		float price=0;
 		for(Producto aux:presupuesto) {
-			price+=aux.getPrice();
+			price+=aux.getPrice()*aux.getUds();
 		}
 		if(price!=0) {
 			getTxtTotal().setText("Total: "+price);
@@ -313,6 +332,7 @@ public class VentanaPresupuestos extends JFrame {
 		}else {
 			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto);
 		}
+		//Eliminar del almacen las uds
 	}
 
 
@@ -422,6 +442,7 @@ public class VentanaPresupuestos extends JFrame {
 			v.add("Nombre");
 			v.add("Tipo");
 			v.add("Precio");
+			v.add("Unidades");
 			modeloTablePresupesto = new DefaultTableModel(v,presupuesto.size()) {
 
 			    /**
