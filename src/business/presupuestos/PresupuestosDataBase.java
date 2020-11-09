@@ -127,7 +127,7 @@ public class PresupuestosDataBase {
 			while (rs.next()) {
 				String id = rs.getString("product_id");
 				int uds = rs.getInt("unidades");
-				productos.add(new Producto(id,uds));
+				productos.add(new Producto("", "", id, 0,uds));
 			}
 			rs.close();
 			st.close();

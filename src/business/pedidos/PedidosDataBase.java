@@ -50,24 +50,33 @@ public class PedidosDataBase {
 		
 	}
 
-//	public boolean addPedido(Pedido pedido) {
-//		try {
-//			PreparedStatement pst = db.getConnection().prepareStatement(
-//					"insert into ips_pedidos_proveedor(product_id,unidades,price,pedido_id,state) values (?,?,?)");
-//			pst.setInt(1, pedido.getProduct_id());
-//			pst.setInt(2, pedido.getUds());
-//			pst.setFloat(3, pedido.getPrice());
-//			pst.setInt(4, pedido.getPedido_id());
-//			pst.setString(5, pedido.getEstado());
-//			pst.executeUpdate();
-//
-//			pst.close();
-//			db.cierraConexion();
-//		} catch (SQLException e) {
-//			System.out.println("Error while operating the database " + e.getMessage());
-//		}
-//		return true;
-//	}
+	public boolean addPedido(Pedido pedido) {
+		try {
+			PreparedStatement pst = db.getConnection().prepareStatement(
+					"insert into ips_pedido(pedido_id,state,total_price) values (?,?,?)");
+			pst.setString(1, Claves.toClave(pedido.getPedido_id()));
+			pst.setString(2, pedido.getEstado());
+			pst.setFloat(3, pedido.getTotal_price());
+			pst.executeUpdate();
+			pst.close();
+			db.cierraConexion();
+			
+			for(Producto pr:pedido.getProductos()) {
+				pst = db.getConnection().prepareStatement(
+					"insert into ips_pedido_producto(pedido_id,product_id,unidades,price) values (?,?,?,?)");
+				pst.setString(1, Claves.toClave(pedido.getPedido_id()));
+				pst.setString(2, pr.getProduct_id());
+				pst.setInt(3, pr.getUds());
+				pst.setFloat(4, pr.getPrice());
+				pst.executeUpdate();
+				pst.close();
+				db.cierraConexion();
+			}
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return true;
+	}
 
 	public Pedido getPedidoById(String pedido_id) {
 		Pedido pr=new Pedido();
@@ -116,10 +125,11 @@ public class PedidosDataBase {
 		return pr;
 	}
 	
-	public void update(String pedido_id) {
+	public void update(String pedido_id,String state) {
 		try {
-			PreparedStatement st = db.getConnection().prepareStatement("update IPS_PEDIDO set  state = 'RECIBIDO' where pedido_id = ?");
-			st.setString(1, Claves.toClave(Integer.parseInt(pedido_id)));
+			PreparedStatement st = db.getConnection().prepareStatement("update IPS_PEDIDO set  state = ? where pedido_id = ?");
+			st.setString(1, state);
+			st.setString(2, Claves.toClave(Integer.parseInt(pedido_id)));
 			st.executeQuery();
 			st.close();
 			db.cierraConexion();

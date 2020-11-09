@@ -25,8 +25,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
+import business.almacen.AlmacenDataBase;
 import business.bbdd.DataBase;
 import business.logic.Pedido;
+import business.logic.Producto;
 import business.pedidos.PedidosDataBase;
 import util.Claves;
 /**
@@ -160,7 +162,18 @@ public class VentanaPedidosProveedor extends JFrame {
 					if(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 1).toString().equals("SOLICITADO")) {
 						getTablePedidos().setValueAt("RECIBIDO", getTablePedidos().getSelectedRow(), 1);
 						PedidosDataBase cdb = new PedidosDataBase(db);
-						cdb.update(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 0).toString());
+						cdb.update(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 0).toString(),getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 1).toString());
+						AlmacenDataBase adb= new AlmacenDataBase(db);
+						Pedido pedido=cdb.getPedidoById(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 0).toString());
+						for(Producto pr:pedido.getProductos()) {
+							int udsI=adb.getUnidades(Claves.toClave(Integer.parseInt(pr.getProduct_id())));
+							pr.setProduct_id(Claves.toClave(Integer.parseInt(pr.getProduct_id())));
+							adb.addAlmacenProducto(pr, udsI+pr.getUds());
+						}
+					}else if(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 1).toString().substring(0, 9).equals("ENCARGADO")) {
+						getTablePedidos().setValueAt("RECIBIDO"+getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 1).toString().substring(9, 20), getTablePedidos().getSelectedRow(), 1);
+						PedidosDataBase cdb = new PedidosDataBase(db);
+						cdb.update(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 0).toString(),getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 1).toString());
 					}
 				}
 			});
@@ -270,7 +283,9 @@ public class VentanaPedidosProveedor extends JFrame {
 			return;
 		}
 		String pedido_id=getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 0).toString();
-		VentanaDetallesPedido.run(db,pedido_id);
+		VentanaDetallesPedido frame = new VentanaDetallesPedido(db,pedido_id);
+		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		frame.setVisible(true);
 	}
 	
 	private JPanel getPanelNortePedidos() {

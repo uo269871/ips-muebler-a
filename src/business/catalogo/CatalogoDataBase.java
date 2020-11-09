@@ -12,6 +12,7 @@ import java.util.List;
 
 import business.bbdd.DataBase;
 import business.logic.Producto;
+import util.Claves;
 
 /**
  * @author uo270656
@@ -46,6 +47,28 @@ public class CatalogoDataBase {
 			System.out.println("Error while operating the database " + e.getMessage());
 	    }
 		return productos;
+    }
+	
+	public Producto getProductoById(String id) {
+		Producto pr=null;
+		try {
+			PreparedStatement st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PRODUCTOS WHERE product_id=?");
+			st.setString(1, Claves.toClave(Integer.parseInt(id)));
+			ResultSet rs=st.executeQuery();
+		    if(rs.next()) {
+		    	String name=rs.getString("name");
+		    	String product_id=rs.getString("product_id");
+		    	String type=rs.getString("type");
+		    	float price=rs.getFloat("price");
+		    	pr= new Producto(name,type,product_id,price);
+		    }
+		    rs.close();
+		    st.close();
+		    db.cierraConexion();
+		}catch(SQLException e){
+			System.out.println("Error while operating the database " + e.getMessage());
+	    }
+		return pr;
     }
 	
 	public List<Producto> getProductosFiltroTipos(String filtro) {

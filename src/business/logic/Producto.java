@@ -139,7 +139,7 @@ public class Producto {
 		if (getClass() != obj.getClass())
 			return false;
 		Producto other = (Producto) obj;
-		if (product_id==other.product_id)
+		if (product_id.equals(other.product_id))
 			return true;
 		else
 			return false;
