@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ui;
 
 import java.awt.BorderLayout;
