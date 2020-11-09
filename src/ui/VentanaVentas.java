@@ -10,13 +10,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,10 +22,8 @@ import javax.swing.table.DefaultTableModel;
 import business.bbdd.DataBase;
 import business.clientes.ClientesDataBase;
 import business.logic.Presupuesto;
-import business.logic.Transportista;
 import business.logic.Venta;
 import business.presupuestos.PresupuestosDataBase;
-import business.transportistas.TransportistasDataBase;
 import business.ventas.VentaDataBase;
 
 public class VentanaVentas extends JFrame {
@@ -48,8 +42,9 @@ public class VentanaVentas extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JButton btnAceptar;
-	
+
 	private Venta v;
+
 	/**
 	 * Launch the application.
 	 */
@@ -77,7 +72,7 @@ public class VentanaVentas extends JFrame {
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
 		contentPane.add(getPanelSur(), BorderLayout.SOUTH);
 	}
-	
+
 	private void cargarPresupuestos() {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		presupuestos = pdb.getPresupuestosPendientes();
@@ -92,6 +87,7 @@ public class VentanaVentas extends JFrame {
 		}
 		return panelCentro;
 	}
+
 	private JPanel getPanelSur() {
 		if (panelSur == null) {
 			panelSur = new JPanel();
@@ -99,6 +95,7 @@ public class VentanaVentas extends JFrame {
 		}
 		return panelSur;
 	}
+
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("Ventas");
@@ -106,6 +103,7 @@ public class VentanaVentas extends JFrame {
 		}
 		return lblNewLabel;
 	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
@@ -113,57 +111,55 @@ public class VentanaVentas extends JFrame {
 		}
 		return scrollPane;
 	}
+
 	private JTable getTable() {
 		if (table == null) {
 			ClientesDataBase cdb = new ClientesDataBase(db);
-			int rows= presupuestos.size();
-			Vector<String> v= new Vector<String>();
+			int rows = presupuestos.size();
+			Vector<String> v = new Vector<String>();
 			v.add("Nombre del cliente");
 			v.add("Fecha de creación");
-			modeloTablePresupesto = new DefaultTableModel(v,rows) {
+			modeloTablePresupesto = new DefaultTableModel(v, rows) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
-			    public boolean isCellEditable(int row, int column) {
-			       return false;
-			    }
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
 			};
 			table = new JTable(modeloTablePresupesto);
 			table.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			for(int i =0;i<presupuestos.size();i++) {
+			for (int i = 0; i < presupuestos.size(); i++) {
 				String nombre = cdb.getCliente(presupuestos.get(i).getClient_id());
 				table.setValueAt(nombre, i, 0);
 				Date date = presupuestos.get(i).getFecha_caducidad();
 				LocalDate d = date.toLocalDate();
 				d = d.minusDays(15);
-				table.setValueAt(d.toString(),i, 1);
+				table.setValueAt(d.toString(), i, 1);
 			}
 		}
 		return table;
 	}
+
 	private JButton getBtnAceptar() {
 		if (btnAceptar == null) {
 			btnAceptar = new JButton("Aceptar presupuesto");
 			btnAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
 					aceptarPresupuesto();
 					ejecutarVentanaTransporte(v);
 				}
-			});	
+			});
 			btnAceptar.setFont(new Font("Dialog", Font.BOLD, 20));
 			btnAceptar.setForeground(Color.BLACK);
 			btnAceptar.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnAceptar;
 	}
-	
+
 	private void ejecutarVentanaTransporte(Venta v) {
 		VentanaTransporte.run(db, v);
 	}
-	
-
-	
 
 	private void aceptarPresupuesto() {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);

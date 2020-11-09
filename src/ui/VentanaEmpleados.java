@@ -18,6 +18,10 @@ import business.empleados.EmpleadosDataBase;
 import business.logic.Empleado;
 import business.logic.Transportista;
 import business.transportistas.TransportistasDataBase;
+import javax.swing.ListSelectionModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaEmpleados extends JFrame {
 
@@ -30,6 +34,8 @@ public class VentanaEmpleados extends JFrame {
 	private DefaultTableModel modeloTableEmpleados;
 	private DataBase db;
 	private List<Empleado> empleados;
+	private JPanel panelSur;
+	private JButton btnAñadir;
 
 	public static void run(DataBase db) {
 		try {
@@ -52,6 +58,7 @@ public class VentanaEmpleados extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
+		contentPane.add(getPanelSur(), BorderLayout.SOUTH);
 	}
 
 	private JPanel getPanelCentro() {
@@ -99,31 +106,58 @@ public class VentanaEmpleados extends JFrame {
 			};
 
 			table = new JTable(modeloTableEmpleados);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			for (int i = 0; i < empleados.size(); i++) {
 				table.setValueAt(empleados.get(i).getNombre(), i, 0);
 				table.setValueAt(empleados.get(i).getDni(), i, 1);
-				if(isTransportista(empleados.get(i))) {
+				if (isTransportista(empleados.get(i))) {
 					table.setValueAt("Transportista", i, 2);
 				} else {
 					table.setValueAt("Vendedor", i, 2);
 				}
-				
+
 			}
 		}
 		return table;
 	}
-	
+
 	private boolean isTransportista(Empleado e) {
 		TransportistasDataBase tdb = new TransportistasDataBase(db);
 		List<Transportista> tranportistas = tdb.getTransportistas();
-		
-		for(Transportista t: tranportistas) {
-			if(t.getDni().equals(e.getDni())) {
+
+		for (Transportista t : tranportistas) {
+			if (e.getDni().equals(t.getDni())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
+
+	private JPanel getPanelSur() {
+		if (panelSur == null) {
+			panelSur = new JPanel();
+			panelSur.add(getBtnAñadir());
+		}
+		return panelSur;
+	}
+
+	private JButton getBtnAñadir() {
+		if (btnAñadir == null) {
+			btnAñadir = new JButton("A\u00F1adir empleado");
+			btnAñadir.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaAñadir.run(db);
+					añadirEmpleado();
+				}
+			});
+		}
+		return btnAñadir;
+	}
+
+	private void añadirEmpleado() {
+		
+	}
+	
 }
