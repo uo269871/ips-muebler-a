@@ -99,6 +99,7 @@ public class VentanaPresupuestos extends JFrame {
 	/** Constructor de la ventana Principal de la aplicacion para la venta de comida rápida
 	 */
 	public VentanaPresupuestos(DataBase db) {
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.db=db;
 		cargarCatalogo();
 		cliente= null;

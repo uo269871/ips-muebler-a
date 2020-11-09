@@ -1,14 +1,14 @@
 package ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaVendedor extends JFrame {
 
@@ -40,8 +40,9 @@ public class VentanaVendedor extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaVendedor(DataBase db) {
+		setTitle("IPS VENDEDOR");
 		this.db=db;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,7 +59,9 @@ public class VentanaVendedor extends JFrame {
 			btnCrearPresupuesto = new JButton("Crear presupuesto");
 			btnCrearPresupuesto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaPresupuestos.run(db);
+					VentanaPresupuestos frame = new VentanaPresupuestos(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
 			btnCrearPresupuesto.setBounds(153, 45, 143, 20);
@@ -68,8 +71,14 @@ public class VentanaVendedor extends JFrame {
 	private JButton getBtnAceptarPresupuesto() {
 		if (btnAceptarPresupuesto == null) {
 			btnAceptarPresupuesto = new JButton("Aceptar presupuesto");
-			btnAceptarPresupuesto.setBounds(161, 90, 127, 20);
-			btnAceptarPresupuesto.setHorizontalAlignment(SwingConstants.RIGHT);
+			btnAceptarPresupuesto.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaVentas frame = new VentanaVentas(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
+				}
+			});
+			btnAceptarPresupuesto.setBounds(146, 90, 156, 20);
 		}
 		return btnAceptarPresupuesto;
 	}
@@ -78,7 +87,9 @@ public class VentanaVendedor extends JFrame {
 			btnHistorialDeVentas = new JButton("Historial de ventas");
 			btnHistorialDeVentas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaVentas.run(db);
+					VentanaHistorialVentas frame = new VentanaHistorialVentas(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
 			btnHistorialDeVentas.setBounds(142, 135, 165, 20);
@@ -90,7 +101,9 @@ public class VentanaVendedor extends JFrame {
 			btnHistorialPedidosAl = new JButton("Historial pedidos al proveedor");
 			btnHistorialPedidosAl.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaPedidosProveedor.run(db);
+					VentanaPedidosProveedor frame = new VentanaPedidosProveedor(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
 			btnHistorialPedidosAl.setBounds(106, 180, 237, 20);

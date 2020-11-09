@@ -1,15 +1,14 @@
 package ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
-import java.awt.event.ActionListener;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -18,8 +17,10 @@ public class VentanaPrincipal extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JButton btnVentas;
-	private JButton btnPresupuesto;
+	private JButton btnVendedor;
+	private JButton btnGerente;
+	private JButton btnTransportista;
+	
 	private DataBase db;
 
 	/**
@@ -38,46 +39,55 @@ public class VentanaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaPrincipal(DataBase db) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 815, 485);
+		setTitle("IPS MUEBLERIA");
+		this.db=db;
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		contentPane.add(getBtnVentas());
-		contentPane.add(getBtnPresupuesto());
-		this.db = db;
+		contentPane.add(getBtnVendedor());
+		contentPane.add(getBtnGerente());
+		contentPane.add(getBtnTransportista());
 	}
 
-	private JButton getBtnVentas() {
-		if (btnVentas == null) {
-			btnVentas = new JButton("Realizar venta");
-			btnVentas.addActionListener(new ActionListener() {
+	private JButton getBtnVendedor() {
+		if (btnVendedor == null) {
+			btnVendedor = new JButton("Iniciar como Vendedor");
+			btnVendedor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaVentas.run(db);
+					VentanaVendedor frame = new VentanaVendedor(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
-			btnVentas.setBounds(315, 256, 169, 87);
-			btnVentas.setFont(new Font("Dialog", Font.BOLD, 20));
-			btnVentas.setForeground(Color.BLACK);
-			btnVentas.setBackground(Color.LIGHT_GRAY);
+			btnVendedor.setBounds(129, 61, 188, 20);
 		}
-		return btnVentas;
+		return btnVendedor;
 	}
-
-	private JButton getBtnPresupuesto() {
-		if (btnPresupuesto == null) {
-			btnPresupuesto = new JButton("Realizar presupuesto");
-			btnPresupuesto.addActionListener(new ActionListener() {
+	private JButton getBtnGerente() {
+		if (btnGerente == null) {
+			btnGerente = new JButton("Iniciar como Gerente");
+			btnGerente.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaPresupuestos.run(db);
+					
 				}
 			});
-			btnPresupuesto.setBounds(279, 97, 240, 87);
-			btnPresupuesto.setFont(new Font("Dialog", Font.BOLD, 20));
-			btnPresupuesto.setForeground(Color.BLACK);
-			btnPresupuesto.setBackground(Color.LIGHT_GRAY);
+			btnGerente.setBounds(129, 106, 188, 20);
 		}
-		return btnPresupuesto;
+		return btnGerente;
+	}
+	private JButton getBtnTransportista() {
+		if (btnTransportista == null) {
+			btnTransportista = new JButton("Iniciar como Transportista");
+			btnTransportista.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
+			btnTransportista.setBounds(129, 151, 188, 20);
+		}
+		return btnTransportista;
 	}
 }
