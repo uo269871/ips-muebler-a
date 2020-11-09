@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -23,6 +24,7 @@ import business.ventas.VentaDataBase;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 
@@ -36,13 +38,13 @@ public class VentanaTransporte extends JFrame {
 	private JPanel panelNorte;
 	private JPanel panelCentro;
 	private JLabel lblTitulo;
-	private JButton btnAceptar;
 	private DefaultTableModel modeloTableTransporte;
 	private DefaultTableModel modeloTableRecoger;
 
 	private DataBase db;
 	private Venta venta;
 	private List<Producto> productos;
+	private List<Producto> transportes;
 	private JPanel panelRecoger;
 	private JPanel panelTransporte;
 	private JScrollPane scrRecoger;
@@ -60,9 +62,9 @@ public class VentanaTransporte extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void run(DataBase db) {
+	public static void run(DataBase db, Venta venta) {
 		try {
-			VentanaTransporte frame = new VentanaTransporte(db);
+			VentanaTransporte frame = new VentanaTransporte(db, venta);
 			frame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,12 +74,13 @@ public class VentanaTransporte extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaTransporte(DataBase db) {
+	public VentanaTransporte(DataBase db, Venta venta) {
 		this.db = db;
+		this.venta = venta;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 815, 485);
-		cargarVenta();
 		cargarProductos();
+		transportes = new ArrayList<Producto>();
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -87,15 +90,10 @@ public class VentanaTransporte extends JFrame {
 
 	}
 
-	private void cargarVenta() {
-		VentaDataBase vdb = new VentaDataBase(db);
-		List<Venta> ventas = vdb.getVentas();
-		venta = ventas.get(0);
-	}
 
 	private void cargarProductos() {
 		VentaDataBase vdb = new VentaDataBase(db);
-		productos = vdb.getProductos("4");
+		productos = vdb.getProductos(venta.getVenta_Id());
 	}
 
 	private JPanel getPanelNorte() {
@@ -196,27 +194,89 @@ public class VentanaTransporte extends JFrame {
 	private JButton getBtnAñadirAEntrega() {
 		if (btnAñadirAEntrega == null) {
 			btnAñadirAEntrega = new JButton("A\u00F1adir a entrega");
-			btnAñadirAEntrega.setBackground(Color.LIGHT_GRAY);
+			btnAñadirAEntrega.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					for(int i=0;i<getTableRecoger().getSelectedRows().length;i++) {
+						if(!transportes.contains(productos.get(getTableRecoger().getSelectedRows()[i]))) {
+							Vector<String> v=new Vector<String>();
+							v.add(productos.get(getTableRecoger().getSelectedRows()[i]).getName());
+							v.add(productos.get(getTableRecoger().getSelectedRows()[i]).getType());
+							v.add(String.valueOf(productos.get(getTableRecoger().getSelectedRows()[i]).getPrice()));
+							modeloTableTransporte.addRow(v);
+							transportes.add(productos.get(getTableRecoger().getSelectedRows()[i]));
+							deleteRecoger();
+						}
+						repaint();
+					}
+				}
+			});
+			btnAñadirAEntrega.setMargin(new Insets(0, 0, 0, 0));
 			btnAñadirAEntrega.setFont(new Font("Dialog", Font.BOLD, 14));
+			btnAñadirAEntrega.setForeground(Color.BLACK);
+			btnAñadirAEntrega.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnAñadirAEntrega;
+	}
+	
+	private void deleteRecoger() {
+		for(int i=0;i<tableRecoger.getSelectedRows().length;i++) {
+			productos.remove(tableRecoger.getSelectedRows()[i]);
+			modeloTableRecoger.removeRow(tableRecoger.getSelectedRows()[i]);
+			i--;
+		}
+		repaint();
 	}
 
 	private JButton getBtnSiguiente() {
 		if (btnSiguiente == null) {
 			btnSiguiente = new JButton("Siguiente");
+			btnSiguiente.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ejecutarVentanaMontar();
+					dispose();
+				}
+			});
+			btnSiguiente.setMargin(new Insets(0, 0, 0, 0));
 			btnSiguiente.setFont(new Font("Dialog", Font.BOLD, 14));
+			btnSiguiente.setForeground(Color.BLACK);
+			btnSiguiente.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnSiguiente;
+	}
+	
+	private void ejecutarVentanaMontar() {
+		VentanaMontar.run(db,transportes,venta);
 	}
 
 	private JButton getBtnBorrar() {
 		if (btnBorrar == null) {
 			btnBorrar = new JButton("Borrar");
+			btnBorrar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					deleteTransporte();
+				}
+			});
+			btnBorrar.setMargin(new Insets(0, 0, 0, 0));
 			btnBorrar.setFont(new Font("Dialog", Font.BOLD, 14));
+			btnBorrar.setForeground(Color.BLACK);
 			btnBorrar.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnBorrar;
+	}
+	
+	private void deleteTransporte() {
+		for(int i=0;i<tableTransporte.getSelectedRows().length;i++) {
+			Vector<String> v=new Vector<String>();
+			v.add(transportes.get(getTableTransporte().getSelectedRows()[i]).getName());
+			v.add(transportes.get(getTableTransporte().getSelectedRows()[i]).getType());
+			v.add(String.valueOf(transportes.get(getTableTransporte().getSelectedRows()[i]).getPrice()));
+			modeloTableRecoger.addRow(v);
+			productos.add(transportes.get(getTableTransporte().getSelectedRows()[i]));
+			transportes.remove(tableTransporte.getSelectedRows()[i]);
+			modeloTableTransporte.removeRow(tableTransporte.getSelectedRows()[i]);	
+			i--;
+		}
+		repaint();
 	}
 
 	private JScrollPane getScrTransporte() {
@@ -231,7 +291,20 @@ public class VentanaTransporte extends JFrame {
 
 	private JTable getTableTransporte() {
 		if (tableTransporte == null) {
-			tableTransporte = new JTable();
+			Vector<String> v= new Vector<String>();
+			v.add("Nombre");
+			v.add("Tipo");
+			v.add("Precio");
+			modeloTableTransporte = new DefaultTableModel(v,transportes.size()) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+			    public boolean isCellEditable(int row, int column) {
+			       return false;
+			    }
+			};
+			tableTransporte = new JTable(modeloTableTransporte);
+			tableTransporte.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		}
 		return tableTransporte;
 	}

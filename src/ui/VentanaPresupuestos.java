@@ -222,8 +222,6 @@ public class VentanaPresupuestos extends JFrame {
 							v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getType());
 							v.add(String.valueOf(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
 							modeloTablePresupesto.addRow(v);
-							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 3);
-							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 4);
 							presupuesto.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]));
 						}
 					actualizaPrecio();
@@ -424,8 +422,6 @@ public class VentanaPresupuestos extends JFrame {
 			v.add("Nombre");
 			v.add("Tipo");
 			v.add("Precio");
-			v.add("Transporte");
-			v.add("Montar");
 			modeloTablePresupesto = new DefaultTableModel(v,presupuesto.size()) {
 
 			    /**
@@ -436,9 +432,6 @@ public class VentanaPresupuestos extends JFrame {
 				@Override
 			    public boolean isCellEditable(int row, int column) {
 			       //all cells false
-					if (column == 3)
-						return true;
-					else
 				   return false;
 			    }
 			};
