@@ -2,6 +2,7 @@ package business.logic;
 
 public class Empleado {
 	
+	public enum Tipo { VENDEDOR, TRANSPORTISTA};
 	private String id;
 	private String dni;
 	private String nombre;
@@ -11,6 +12,7 @@ public class Empleado {
 	private int minuto_entrada;
 	private int hora_salida;
 	private int minuto_salida;
+	private Tipo tipo;
 	
 	public Empleado() {
 		
@@ -98,5 +100,17 @@ public class Empleado {
 
 	public void setMinuto_salida(int minuto_salida) {
 		this.minuto_salida = minuto_salida;
+	}
+	
+	public void isVendedor() {
+		tipo = Tipo.VENDEDOR;
+	}
+	
+	public void isTransportista() {
+		tipo = Tipo.TRANSPORTISTA;
+	}
+	
+	public Tipo getTipo() {
+		return tipo;
 	}
 }

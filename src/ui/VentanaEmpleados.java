@@ -36,6 +36,7 @@ public class VentanaEmpleados extends JFrame {
 	private List<Empleado> empleados;
 	private JPanel panelSur;
 	private JButton btnAñadir;
+	private JButton btnNewButton;
 
 	public static void run(DataBase db) {
 		try {
@@ -139,6 +140,7 @@ public class VentanaEmpleados extends JFrame {
 		if (panelSur == null) {
 			panelSur = new JPanel();
 			panelSur.add(getBtnAñadir());
+			panelSur.add(getBtnNewButton());
 		}
 		return panelSur;
 	}
@@ -154,5 +156,22 @@ public class VentanaEmpleados extends JFrame {
 			});
 		}
 		return btnAñadir;
+	}
+	private JButton getBtnNewButton() {
+		if (btnNewButton == null) {
+			btnNewButton = new JButton("Modificar empleado");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					EmpleadosDataBase edb = new EmpleadosDataBase(db);
+					empleados = edb.getEmpleados();
+					int pos = table.getSelectedRow();
+					
+					Empleado emp = empleados.get(pos);
+					
+					VentanaModificar.run(db, emp);
+				}
+			});
+		}
+		return btnNewButton;
 	}
 }

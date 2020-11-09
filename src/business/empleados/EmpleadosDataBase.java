@@ -48,7 +48,7 @@ public class EmpleadosDataBase {
 	public void addEmpleado(Empleado emp) {
 		try {
 			PreparedStatement pst = db.getConnection().prepareStatement(
-					"insert into IPS_EMPLEADOS(id, dni, nombre, direccion, telefono, hora_entrada, minuto_entrada, hora_salida, minuto_salida)"
+					"insert into IPS_EMPLEADOS(id, dni, nombre, direccion, telefono, hora_entrada, minuto_entrada, hora_salida, minuto_salida) "
 							+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pst.setString(1,emp.getId());
 			pst.setString(2,emp.getDni());
@@ -59,6 +59,30 @@ public class EmpleadosDataBase {
 			pst.setInt(7,emp.getMinuto_entrada());
 			pst.setInt(8,emp.getHora_salida());
 			pst.setInt(9,emp.getMinuto_salida());
+			
+			pst.executeUpdate();
+			
+			
+			pst.close();
+			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+	}
+	
+	public void updateEmpleado(Empleado emp) {
+		try {
+			PreparedStatement pst = db.getConnection().prepareStatement(
+					"update IPS_EMPLEADOS set direccion = ?, telefono = ?, hora_entrada = ?, minuto_entrada = ?, hora_salida = ?, minuto_salida = ?"
+							+ " where dni = ?");
+			
+			pst.setString(1,emp.getDir());
+			pst.setInt(2,emp.getTelefono());
+			pst.setInt(3,emp.getHora_entrada());
+			pst.setInt(4,emp.getMinuto_entrada());
+			pst.setInt(5,emp.getHora_salida());
+			pst.setInt(6,emp.getMinuto_salida());
+			pst.setString(7,emp.getDni());
 			
 			pst.executeUpdate();
 			
