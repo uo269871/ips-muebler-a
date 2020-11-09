@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,7 +39,6 @@ public class VentanaVentas extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private DataBase db;
-	private Transportista tr;
 	private DefaultTableModel modeloTablePresupesto;
 	private List<Presupuesto> presupuestos;
 	private JPanel panelCentro;
@@ -47,6 +47,8 @@ public class VentanaVentas extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JButton btnAceptar;
+	
+	private Venta v;
 	/**
 	 * Launch the application.
 	 */
@@ -130,7 +132,10 @@ public class VentanaVentas extends JFrame {
 			for(int i =0;i<presupuestos.size();i++) {
 				String nombre = cdb.getCliente(presupuestos.get(i).getClient_id());
 				table.setValueAt(nombre, i, 0);
-				table.setValueAt(presupuestos.get(i).getFecha_caducidad(),i, 1);
+				Date date = presupuestos.get(i).getFecha_caducidad();
+				LocalDate d = date.toLocalDate();
+				d = d.minusDays(15);
+				table.setValueAt(d.toString(),i, 1);
 			}
 		}
 		return table;
@@ -142,7 +147,7 @@ public class VentanaVentas extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					
 					aceptarPresupuesto();
-					elegirTransporte();
+					ejecutarVentanaTransporte(v);
 				}
 			});	
 			btnAceptar.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -152,102 +157,22 @@ public class VentanaVentas extends JFrame {
 		return btnAceptar;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void elegirTransporte() {
-		Integer[] date= {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
-        Integer[] month= {1,2,3,4,5,6,7,8,9,10,11,12};
-        Integer[] year={2020,2021,2022};
-        Integer[] hour= {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
-        Integer[] minute = new Integer[60];
-        for (int i = 0; i < 60; i++) {
-        	minute[i] = i;
-        }
-        JComboBox<Integer> jcd = new JComboBox(date);
-        JComboBox<Integer> jcm = new JComboBox(month);
-        JComboBox<Integer> jcy = new JComboBox(year);
-        JComboBox<Integer> jch = new JComboBox(hour);
-        JComboBox<Integer> jcmin = new JComboBox(minute);
-        JButton aceptar = new JButton();
-
-        jcd.setEditable(true);
-        jcm.setEditable(true);
-        jcy.setEditable(true);
-        jch.setEditable(true);
-        jcmin.setEditable(true);
-        
-        aceptar.addActionListener(new ActionListener() {
-        	@SuppressWarnings("deprecation")
-			public void actionPerformed(ActionEvent e) { 
-        	    elegirTransportista((int)jch.getSelectedItem(),(int)jcmin.getSelectedItem());
-        	    TransportesDataBase tdb = new TransportesDataBase(db);
-        	    VentaDataBase vdb = new VentaDataBase(db);
-        	    tdb.addTransportes(new Transporte(Integer.toString(vdb.getNumeroVentas() + 1), vdb.getUltimaVenta().getVenta_Id(), tr.getDni(), new Date((int)jcy.getSelectedItem(), (int)jcm.getSelectedItem(), (int)jcd.getSelectedItem()), (int)jch.getSelectedItem(),(int)jcmin.getSelectedItem()));
-        	    dispose();
-        	  } 
-        });
-
-        //create a JOptionPane
-        Object[] options = new Object[] {};
-        JOptionPane jop = new JOptionPane("Please Select",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        JOptionPane.DEFAULT_OPTION,
-                                        null,options, null);
-
-        //add combos to JOptionPane
-        jop.add(jcd);
-        jop.add(jcm);
-        jop.add(jcy);
-        jop.add(jch);
-        jop.add(jcmin);
-        jop.add(aceptar);
-
-        //create a JDialog and add JOptionPane to it 
-        JDialog diag = new JDialog();
-        diag.getContentPane().add(jop);
-        diag.pack();
-        diag.setVisible(true);
-		
+	private void ejecutarVentanaTransporte(Venta v) {
+		VentanaTransporte.run(db, v);
 	}
+	
 
-	protected void elegirTransportista(int hora, int minuto) {
-		TransportistasDataBase tdb = new TransportistasDataBase(db);
-		JComboBox<Transportista> trans = new JComboBox<Transportista>(new DefaultComboBoxModel<Transportista>(tdb.getTranspotista(hora, minuto)));
-		JButton aceptar = new JButton();
-
-		//create a JOptionPane
-        Object[] options = new Object[] {};
-        JOptionPane jop = new JOptionPane("Please Select",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        JOptionPane.DEFAULT_OPTION,
-                                        null,options, null);
-
-        //add combos to JOptionPane
-        jop.add(trans);
-        jop.add(aceptar);
-
-        //create a JDialog and add JOptionPane to it 
-        JDialog diag = new JDialog();
-        diag.getContentPane().add(jop);
-        diag.pack();
-        diag.setVisible(true);
-        
-        aceptar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) { 
-        		tr = (Transportista) trans.getSelectedItem();
-        	  } 
-        });
-	}
+	
 
 	private void aceptarPresupuesto() {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		VentaDataBase vdb = new VentaDataBase(db);
 		int id = vdb.getNumeroVentas() + 1;
-		Presupuesto p = presupuestos.get(table.getSelectedRow());
-		Venta v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
+		int pos = table.getSelectedRow();
+		Presupuesto p = presupuestos.get(pos);
+		v = new Venta(p.getClient_id(), String.valueOf(id), new Date(System.currentTimeMillis()));
 		List<String> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
-		List<Integer> transporte = pdb.getTransportes(p.getPresupuesto_id());
-		List<Integer> montaje = pdb.getTransportes(p.getPresupuesto_id());
-		vdb.addVenta(v, products,transporte,montaje);
+		vdb.addVenta(v, products);
 		pdb.eliminarPresupuesto(p.getPresupuesto_id());
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import business.bbdd.DataBase;
 import business.logic.Transportista;
@@ -17,8 +18,8 @@ public class TransportistasDataBase {
 		this.db = db;
 	}
 
-	public Transportista[] getTranspotista(int hora, int minuto) {
-        ArrayList<Transportista> transportistas=new ArrayList<Transportista>();
+	public List<Transportista> getTranspotista(int hora, int minuto) {
+        List<Transportista> transportistas=new ArrayList<Transportista>();
         try {
             Statement st = db.getConnection().createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM  IPS_TRANSPORTISTAS"
@@ -42,7 +43,7 @@ public class TransportistasDataBase {
         }catch(SQLException e){
             System.out.println("Error while operating the database " + e.getMessage());
         }
-        return (Transportista[]) transportistas.toArray();
+        return transportistas;
     }
 
 }

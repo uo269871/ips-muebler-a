@@ -323,20 +323,14 @@ public class VentanaPresupuestos extends JFrame {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		List<Presupuesto> presupuestos = pdb.getPresupuestos();
 		int id=1;
-		List<Integer> transporte = new ArrayList<Integer>();
-		List<Integer> montaje = new ArrayList<Integer>();
-		for (int i = 0; i < modeloTablePresupesto.getRowCount(); i++) {
-			transporte.add(0);
-			montaje.add(0);
-		}
 		if(presupuestos.size()>0) {
 			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
 			id++;
 		}
 		if(cliente!=null) {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), cliente.getClient_id()),presupuesto,transporte,montaje);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), cliente.getClient_id()),presupuesto);
 		}else {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto,transporte,montaje);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto);
 		}
 		//Eliminar del almacen las uds
 	}
@@ -459,9 +453,6 @@ public class VentanaPresupuestos extends JFrame {
 				@Override
 			    public boolean isCellEditable(int row, int column) {
 			       //all cells false
-					if (column == 3)
-						return true;
-					else
 				   return false;
 			    }
 			};
