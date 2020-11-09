@@ -63,6 +63,7 @@ public class VentanaHistorialVentas extends JFrame {
 		setContentPane(contentPane);
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
 		contentPane.add(getPanelBotones(), BorderLayout.SOUTH);
+		
 	}
 
 	private JPanel getPanelCentro() {
