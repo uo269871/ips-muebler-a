@@ -2,14 +2,18 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,10 +22,6 @@ import business.empleados.EmpleadosDataBase;
 import business.logic.Empleado;
 import business.logic.Transportista;
 import business.transportistas.TransportistasDataBase;
-import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaEmpleados extends JFrame {
 
@@ -37,6 +37,8 @@ public class VentanaEmpleados extends JFrame {
 	private JPanel panelSur;
 	private JButton btnAñadir;
 	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
 
 	public static void run(DataBase db) {
 		try {
@@ -53,7 +55,7 @@ public class VentanaEmpleados extends JFrame {
 	public VentanaEmpleados(DataBase db) {
 		this.db = db;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 666, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -141,6 +143,8 @@ public class VentanaEmpleados extends JFrame {
 			panelSur = new JPanel();
 			panelSur.add(getBtnAñadir());
 			panelSur.add(getBtnNewButton());
+			panelSur.add(getBtnNewButton_1());
+			panelSur.add(getBtnNewButton_2());
 		}
 		return panelSur;
 	}
@@ -157,6 +161,7 @@ public class VentanaEmpleados extends JFrame {
 		}
 		return btnAñadir;
 	}
+
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("Modificar empleado");
@@ -165,13 +170,68 @@ public class VentanaEmpleados extends JFrame {
 					EmpleadosDataBase edb = new EmpleadosDataBase(db);
 					empleados = edb.getEmpleados();
 					int pos = table.getSelectedRow();
-					
+
 					Empleado emp = empleados.get(pos);
-					
+
 					VentanaModificar.run(db, emp);
 				}
 			});
 		}
 		return btnNewButton;
+	}
+
+	private JButton getBtnNewButton_1() {
+		if (btnNewButton_1 == null) {
+			btnNewButton_1 = new JButton("Eliminar empleado");
+			btnNewButton_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					eliminarEmpleado();
+				}
+			});
+		}
+		return btnNewButton_1;
+	}
+
+	private void eliminarEmpleado() {
+		EmpleadosDataBase edb = new EmpleadosDataBase(db);
+		empleados = edb.getEmpleados();
+		int pos = table.getSelectedRow();
+
+		String emp = empleados.get(pos).getId();
+		edb.deleteEmpleado(emp);
+		empleados = edb.getEmpleados();
+		actualizarTabla();
+	}
+	
+	private void actualizarTabla() {
+		borrarTabla();
+
+		for (int i = 0; i < empleados.size(); i++) {
+			Vector<String> v = new Vector<String>();
+			v.add(empleados.get(i).getNombre());
+			v.add(empleados.get(i).getDni());
+			if (isTransportista(empleados.get(i))) {
+				v.add("Transportista");
+			} else {
+				v.add("Vendedor");
+			}
+			modeloTableEmpleados.addRow(v);
+		}
+	}
+	
+	private void borrarTabla() {
+		modeloTableEmpleados.getDataVector().removeAllElements();
+		modeloTableEmpleados.fireTableDataChanged();
+	}
+	private JButton getBtnNewButton_2() {
+		if (btnNewButton_2 == null) {
+			btnNewButton_2 = new JButton("Volver");
+			btnNewButton_2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+		}
+		return btnNewButton_2;
 	}
 }

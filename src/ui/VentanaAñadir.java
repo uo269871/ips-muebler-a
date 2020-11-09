@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -255,8 +256,11 @@ public class VentanaAñadir extends JFrame {
 	private void añadirEmpleado() {
 		EmpleadosDataBase edb = new EmpleadosDataBase(db);
 		Empleado emp = new Empleado();
+		List<Empleado> aux = edb.getEmpleados();
+		int i = Integer.parseInt(aux.get(aux.size()-1).getId());
+		String id = String.valueOf(i + 1);
 		
-		emp.setId(String.valueOf(edb.getEmpleados().size() + 1));
+		emp.setId(id);
 		emp.setNombre(getTxtNombre().getText() + " " + getTxtApellidos().getText());
 		emp.setDir(getTxtDireccion().getText());
 		emp.setDni(getTxtDni().getText());

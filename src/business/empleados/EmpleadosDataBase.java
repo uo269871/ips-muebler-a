@@ -92,4 +92,19 @@ public class EmpleadosDataBase {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
 	}
+	
+	public void deleteEmpleado(String id) {
+		try {
+			PreparedStatement pst = db.getConnection().prepareStatement(
+					"delete from IPS_EMPLEADOS where id = ?");
+			
+			pst.setString(1,id);
+			pst.executeUpdate();
+			
+			pst.close();
+			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+	}
 }
