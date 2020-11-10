@@ -32,6 +32,11 @@ public class Producto {
 		this(pr.name,pr.type,pr.product_id,pr.price);
 		this.uds=uds;
 	}
+	
+	public Producto(String pr,int uds) {
+		this.product_id = pr;
+		this.uds=uds;
+	}
 
 	public Producto() {
 		super();

@@ -3,6 +3,7 @@ package business.logic;
 public class Transportista {
 	
 	private String dni;
+	private String id;
 	private String nombre;
 	private int telefono;
 	private int hora_entrada;
@@ -10,9 +11,10 @@ public class Transportista {
 	private int hora_salida;
 	private int minuto_salida;
 	
-	public Transportista(String dni, String nombre, int telefono, int hora_entrada, int minuto_entrada, int hora_salida, int minuto_salida) {
+	public Transportista(String dni, String id, String nombre, int telefono, int hora_entrada, int minuto_entrada, int hora_salida, int minuto_salida) {
 		super();
 		this.setDni(dni);
+		this.setId(id);
 		this.setNombre(nombre);
 		this.setTelefono(telefono);
 		this.setHora_entrada(hora_entrada);
@@ -80,6 +82,14 @@ public class Transportista {
 	@Override
 	public String toString() {
 		return dni + " " + nombre;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

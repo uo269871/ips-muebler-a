@@ -71,7 +71,7 @@ public class VentanaPrincipal extends JFrame {
 			btnGerente = new JButton("Iniciar como Gerente");
 			btnGerente.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					VentanaGerente.run(db);
 				}
 			});
 			btnGerente.setBounds(129, 106, 188, 20);
@@ -83,7 +83,7 @@ public class VentanaPrincipal extends JFrame {
 			btnTransportista = new JButton("Iniciar como Transportista");
 			btnTransportista.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					VentanaTransportista.run(db);
 				}
 			});
 			btnTransportista.setBounds(129, 151, 188, 20);

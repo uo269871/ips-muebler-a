@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -75,7 +76,7 @@ public class VentanaTransporte extends JFrame {
 	public VentanaTransporte(DataBase db, Venta venta) {
 		this.db = db;
 		this.venta = venta;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 815, 485);
 		cargarProductos();
 		transportes = new ArrayList<Producto>();
@@ -87,7 +88,6 @@ public class VentanaTransporte extends JFrame {
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
 
 	}
-
 
 	private void cargarProductos() {
 		VentaDataBase vdb = new VentaDataBase(db);
@@ -175,6 +175,7 @@ public class VentanaTransporte extends JFrame {
 	private JPanel getPanelBtnRecoger() {
 		if (panelBtnRecoger == null) {
 			panelBtnRecoger = new JPanel();
+			panelBtnRecoger.setLayout(new GridLayout(0, 1, 0, 0));
 			panelBtnRecoger.add(getBtnAñadirAEntrega());
 		}
 		return panelBtnRecoger;
@@ -183,6 +184,7 @@ public class VentanaTransporte extends JFrame {
 	private JPanel getPanelBtnEntregar() {
 		if (panelBtnEntregar == null) {
 			panelBtnEntregar = new JPanel();
+			panelBtnEntregar.setLayout(new GridLayout(0, 2, 0, 0));
 			panelBtnEntregar.add(getBtnBorrar());
 			panelBtnEntregar.add(getBtnSiguiente());
 		}
@@ -194,9 +196,9 @@ public class VentanaTransporte extends JFrame {
 			btnAñadirAEntrega = new JButton("A\u00F1adir a entrega");
 			btnAñadirAEntrega.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					for(int i=0;i<getTableRecoger().getSelectedRows().length;i++) {
-						if(!transportes.contains(productos.get(getTableRecoger().getSelectedRows()[i]))) {
-							Vector<String> v=new Vector<String>();
+					for (int i = 0; i < getTableRecoger().getSelectedRows().length; i++) {
+						if (!transportes.contains(productos.get(getTableRecoger().getSelectedRows()[i]))) {
+							Vector<String> v = new Vector<String>();
 							v.add(productos.get(getTableRecoger().getSelectedRows()[i]).getName());
 							v.add(productos.get(getTableRecoger().getSelectedRows()[i]).getType());
 							v.add(String.valueOf(productos.get(getTableRecoger().getSelectedRows()[i]).getPrice()));
@@ -215,9 +217,9 @@ public class VentanaTransporte extends JFrame {
 		}
 		return btnAñadirAEntrega;
 	}
-	
+
 	private void deleteRecoger() {
-		for(int i=0;i<tableRecoger.getSelectedRows().length;i++) {
+		for (int i = 0; i < tableRecoger.getSelectedRows().length; i++) {
 			productos.remove(tableRecoger.getSelectedRows()[i]);
 			modeloTableRecoger.removeRow(tableRecoger.getSelectedRows()[i]);
 			i--;
@@ -230,8 +232,12 @@ public class VentanaTransporte extends JFrame {
 			btnSiguiente = new JButton("Siguiente");
 			btnSiguiente.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					ejecutarVentanaMontar();
-					dispose();
+					if (transportes.size() > 0) {
+						ejecutarVentanaMontar();
+						dispose();
+					}
+					else
+						JOptionPane.showMessageDialog(getContentPane(), "No hay productos seleccionados para transportar");
 				}
 			});
 			btnSiguiente.setMargin(new Insets(0, 0, 0, 0));
@@ -241,9 +247,9 @@ public class VentanaTransporte extends JFrame {
 		}
 		return btnSiguiente;
 	}
-	
+
 	private void ejecutarVentanaMontar() {
-		VentanaMontar.run(db,transportes,venta);
+		VentanaMontar.run(db, transportes, venta);
 	}
 
 	private JButton getBtnBorrar() {
@@ -261,17 +267,17 @@ public class VentanaTransporte extends JFrame {
 		}
 		return btnBorrar;
 	}
-	
+
 	private void deleteTransporte() {
-		for(int i=0;i<tableTransporte.getSelectedRows().length;i++) {
-			Vector<String> v=new Vector<String>();
+		for (int i = 0; i < tableTransporte.getSelectedRows().length; i++) {
+			Vector<String> v = new Vector<String>();
 			v.add(transportes.get(getTableTransporte().getSelectedRows()[i]).getName());
 			v.add(transportes.get(getTableTransporte().getSelectedRows()[i]).getType());
 			v.add(String.valueOf(transportes.get(getTableTransporte().getSelectedRows()[i]).getPrice()));
 			modeloTableRecoger.addRow(v);
 			productos.add(transportes.get(getTableTransporte().getSelectedRows()[i]));
 			transportes.remove(tableTransporte.getSelectedRows()[i]);
-			modeloTableTransporte.removeRow(tableTransporte.getSelectedRows()[i]);	
+			modeloTableTransporte.removeRow(tableTransporte.getSelectedRows()[i]);
 			i--;
 		}
 		repaint();
@@ -289,17 +295,17 @@ public class VentanaTransporte extends JFrame {
 
 	private JTable getTableTransporte() {
 		if (tableTransporte == null) {
-			Vector<String> v= new Vector<String>();
+			Vector<String> v = new Vector<String>();
 			v.add("Nombre");
 			v.add("Tipo");
 			v.add("Precio");
-			modeloTableTransporte = new DefaultTableModel(v,transportes.size()) {
+			modeloTableTransporte = new DefaultTableModel(v, transportes.size()) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
-			    public boolean isCellEditable(int row, int column) {
-			       return false;
-			    }
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
 			};
 			tableTransporte = new JTable(modeloTableTransporte);
 			tableTransporte.setFont(new Font("Tahoma", Font.PLAIN, 18));
