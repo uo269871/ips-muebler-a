@@ -155,6 +155,7 @@ public class VentanaVentas extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					aceptarPresupuesto();
 					ejecutarVentanaTransporte(v);
+					dispose();
 				}
 			});
 			btnAceptar.setFont(new Font("Dialog", Font.BOLD, 20));
