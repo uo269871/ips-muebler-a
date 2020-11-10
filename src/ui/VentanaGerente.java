@@ -20,6 +20,7 @@ public class VentanaGerente extends JFrame {
 	private JButton btnAlmacen;
 	
 	private DataBase db;
+	private JButton btnNewButton;
 
 	/**
 	 * Launch the application.
@@ -47,6 +48,7 @@ public class VentanaGerente extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.add(getBtnAlmacen());
+		contentPane.add(getBtnNewButton());
 	}
 
 	private JButton getBtnAlmacen() {
@@ -57,8 +59,20 @@ public class VentanaGerente extends JFrame {
 					VentanaAlmacen.run(db);
 				}
 			});
-			btnAlmacen.setBounds(122, 116, 184, 23);
+			btnAlmacen.setBounds(125, 73, 184, 23);
 		}
 		return btnAlmacen;
+	}
+	private JButton getBtnNewButton() {
+		if (btnNewButton == null) {
+			btnNewButton = new JButton("Administrar empleados");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaEmpleados.run(db);
+				}
+			});
+			btnNewButton.setBounds(125, 136, 184, 23);
+		}
+		return btnNewButton;
 	}
 }

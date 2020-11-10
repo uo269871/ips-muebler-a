@@ -18,14 +18,26 @@ public class TransportistasDataBase {
 		this.db = db;
 	}
 	
+	public void addTransportista(String dni, String id_empleado) {
+		Statement st;
+		try {
+			st = db.getConnection().createStatement();
+			st.executeQuery("INSERT INTO IPS_TRANSPORTISTAS(dni,id_empleado) values(" + dni +","+id_empleado+")");
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		db.cierraConexion();
+	}
+	
 	public List<Transportista> getTransportistas() {
 		List<Transportista> empleados = new ArrayList<Transportista>();
 		try {
 			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_TRANSPORTISTAS");
+			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_EMPLEADOS where id in (select id_empleado from ips_transportistas)");
 			while (rs.next()) {
 				String dni = rs.getString("dni");
-				String id = rs.getString("id_empleado");
+				String id = rs.getString("id");
 				String nombre = rs.getString("nombre");
 				int telefono = rs.getInt("telefono");
 				int hora_entrada = rs.getInt("hora_entrada");
@@ -49,13 +61,13 @@ public class TransportistasDataBase {
         List<Transportista> transportistas=new ArrayList<Transportista>();
         try {
             Statement st = db.getConnection().createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM  IPS_TRANSPORTISTAS"
-                    + " WHERE (HORA_ENTRADA < " + hora + " AND HORA_SALIDA >" + hora
+            ResultSet rs = st.executeQuery("SELECT * from IPS_EMPLEADOS WHERE id in (select id_empleado from ips_transportistas) AND"
+                    + " ((HORA_ENTRADA < " + hora + " AND HORA_SALIDA >" + hora
                     + ") OR (HORA_ENTRADA = " + hora + " AND MINUTO_ENTRADA < " + minuto
-                    + ") OR (HORA_SALIDA = " + hora + " AND MINUTO_SALIDA > " + minuto + ")");
+                    + ") OR (HORA_SALIDA = " + hora + " AND MINUTO_SALIDA > " + minuto + "))");
             while(rs.next()) {
                 String dni=rs.getString("dni");
-                String id=rs.getString("id_empleado");
+                String id=rs.getString("id");
                 String nombre=rs.getString("nombre");
                 int telefono=rs.getInt("telefono");
                 int hora_entrada=rs.getInt("hora_entrada");
