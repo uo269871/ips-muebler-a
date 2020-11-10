@@ -278,9 +278,9 @@ public class VentanaAñadir extends JFrame {
 			
 			
 			
-			if(getComboBox().getSelectedIndex() == 0) {
+			if(getComboBox().getSelectedIndex() == 1) {
 				emp.isVendedor();
-			} else if(getComboBox().getSelectedIndex() == 1) {
+			} else if(getComboBox().getSelectedIndex() == 0) {
 				emp.isTransportista();
 			}
 			
