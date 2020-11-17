@@ -29,7 +29,7 @@ public class AlmacenDataBase {
 				pst.executeUpdate();
 
 				pst.close();
-				db.cierraConexion();
+//				db.cierraConexion();
 			} catch (SQLException e) {
 				System.out.println("Error while operating the database " + e.getMessage());
 			}
@@ -45,7 +45,7 @@ public class AlmacenDataBase {
 				pst.executeUpdate();
 				
 				pst.close();
-				db.cierraConexion();
+//				db.cierraConexion();
 			} catch (SQLException e) {
 				System.out.println("Error while operating the database " + e.getMessage());
 			}
@@ -63,7 +63,7 @@ public class AlmacenDataBase {
 			if (rs.next()) {
 				uds = rs.getInt("unidades");
 			}
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -80,7 +80,7 @@ public class AlmacenDataBase {
 			while (rs.next()) {
 				aux.add(rs.getString("product_id"));
 			}
-			db.cierraConexion();
+//			db.cierraConexion();
 			for (String s : aux) {
 				pst = db.getConnection().prepareStatement("select * from ips_productos where product_id = ?");
 				pst.setString(1, s);
@@ -93,7 +93,7 @@ public class AlmacenDataBase {
 					productos.add(p);
 				}
 				pst.close();
-				db.cierraConexion();
+//				db.cierraConexion();
 
 			}
 		} catch (SQLException e) {

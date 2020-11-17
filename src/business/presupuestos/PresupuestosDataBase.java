@@ -43,7 +43,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -66,7 +66,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -83,18 +83,17 @@ public class PresupuestosDataBase {
 			pst.executeUpdate();
 
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
+			pst = db.getConnection().prepareStatement(
+					"insert into ips_presupuestos_productos(presupuesto_id,product_id,unidades) values (?,?,?)");
 			for (Producto product : productos) {
-				pst = db.getConnection().prepareStatement(
-						"insert into ips_presupuestos_productos(presupuesto_id,product_id,unidades) values (?,?,?)");
 				pst.setString(1, presupuesto.getPresupuesto_id());
 				pst.setString(2, product.getProduct_id());
 				pst.setInt(3, product.getUds());
 				pst.executeUpdate();
-				
-				pst.close();
-				db.cierraConexion();
 			}
+			pst.close();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -113,7 +112,7 @@ public class PresupuestosDataBase {
 			rs = st.executeQuery("delete from ips_presupuestos where presupuesto_id = " + id);
 			
 			
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -131,7 +130,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -149,7 +148,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
