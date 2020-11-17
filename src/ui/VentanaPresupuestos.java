@@ -78,6 +78,7 @@ public class VentanaPresupuestos extends JFrame {
 
 	
 	private DataBase db;
+	private JButton btnCargarPlantillas;
 	
 	/**
 	 * Launch the application.
@@ -98,9 +99,9 @@ public class VentanaPresupuestos extends JFrame {
 	public VentanaPresupuestos(DataBase db) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.db=db;
+		this.presupuesto= new ArrayList<Producto>();
 		cargarCatalogo();
 		cliente= null;
-		presupuesto=new ArrayList<Producto>();
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().add(getPanelNorte(), BorderLayout.NORTH);
 		getContentPane().add(getPanelCentro(), BorderLayout.CENTER);
@@ -195,7 +196,8 @@ public class VentanaPresupuestos extends JFrame {
 			panelBotonCatalogo = new JPanel();
 			panelBotonCatalogo.setForeground(Color.WHITE);
 			panelBotonCatalogo.setBackground(Color.WHITE);
-			panelBotonCatalogo.setLayout(new GridLayout(0, 1, 0, 0));
+			panelBotonCatalogo.setLayout(new GridLayout(4, 1, 0, 0));
+			panelBotonCatalogo.add(getBtnCargarPlantillas());
 			panelBotonCatalogo.add(getBtnAddToPresupuesto());
 			panelBotonCatalogo.add(getBtnFilterPrice());
 			panelBotonCatalogo.add(getBtnFilterType());
@@ -238,6 +240,7 @@ public class VentanaPresupuestos extends JFrame {
 									Producto pr=new Producto(catalogo.get(getTableCatalogo().getSelectedRows()[i]),uds);
 									presupuesto.remove(pr);
 									presupuesto.add(pr);
+									break;
 								}
 							}
 						}
@@ -252,6 +255,27 @@ public class VentanaPresupuestos extends JFrame {
 			btnAddToPresupuesto.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnAddToPresupuesto;
+	}
+	
+	void setPresupuesto(List<Producto> pre){
+		presupuesto=new ArrayList<Producto>();
+		modeloTablePresupesto.getDataVector().removeAllElements();
+		modeloTablePresupesto.fireTableDataChanged();
+		CatalogoDataBase cdb= new CatalogoDataBase(db);
+		for(int i =0;i<pre.size();i++) {
+			Producto pr=cdb.getProductoById(pre.get(i).getProduct_id());
+			pr.setUds(pre.get(i).getUds());
+			Vector<String> v= new Vector<String>();
+			v.add(pr.getName());
+			v.add(pr.getType());
+			v.add(pr.getPrice()+"");
+			v.add(pr.getUds()+"");
+			modeloTablePresupesto.addRow(v);
+			presupuesto.add(pr);
+		}
+		actualizaPrecio();
+		changeEnableSave();
+		repaint();
 	}
 	
 	private void actualizaPrecio() {
@@ -736,5 +760,27 @@ public class VentanaPresupuestos extends JFrame {
 
 	private void cargarTipos() {
 		tipos = new CatalogoDataBase(db).getTipos();
+	}
+	private JButton getBtnCargarPlantillas() {
+		if (btnCargarPlantillas == null) {
+			btnCargarPlantillas = new JButton("Cargar plantillas");
+			btnCargarPlantillas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ejecutarVentanaPlantillas();
+				}
+			});
+			btnCargarPlantillas.setMnemonic('t');
+			btnCargarPlantillas.setMargin(new Insets(0, 0, 0, 0));
+			btnCargarPlantillas.setForeground(Color.BLACK);
+			btnCargarPlantillas.setFont(new Font("Dialog", Font.BOLD, 14));
+			btnCargarPlantillas.setBackground(Color.LIGHT_GRAY);
+		}
+		return btnCargarPlantillas;
+	}
+	
+	private void ejecutarVentanaPlantillas() {
+		VentanaPlantillasPresupuestos frame = new VentanaPlantillasPresupuestos(this,db);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
