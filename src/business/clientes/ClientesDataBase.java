@@ -41,7 +41,7 @@ public class ClientesDataBase {
 		    }
 		    rs.close();
 		    st.close();
-		    db.cierraConexion();
+//		    db.cierraConexion();
 		}catch(SQLException e){
 			System.out.println("Error while operating the database " + e.getMessage());
 	    }
@@ -58,7 +58,7 @@ public class ClientesDataBase {
 		    }
 		    rs.close();
 		    st.close();
-		    db.cierraConexion();
+//		    db.cierraConexion();
 		}catch(SQLException e){
 			System.out.println("Error while operating the database " + e.getMessage());
 	    }
@@ -75,7 +75,7 @@ public class ClientesDataBase {
 			pst.executeUpdate();
 		    
 		    pst.close();
-		    db.cierraConexion();
+//		    db.cierraConexion();
 		}catch(SQLException e){
 			System.out.println("Error while operating the database " + e.getMessage());
 	    }

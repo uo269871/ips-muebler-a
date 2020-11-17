@@ -24,8 +24,8 @@ public class DataBase {
 
 	final static String DB_URL = "jdbc:oracle:thin:@156.35.94.99:1521:DESA";
 
-	final static String DB_USER = "UO271033";
-	final static String DB_PASSWORD = "passuwu";
+	final static String DB_USER = "UO269871";
+	final static String DB_PASSWORD = "kubaja14";
 
 
 	final static int BASE_VACIA = 0;
@@ -36,7 +36,7 @@ public class DataBase {
 
 	public DataBase(int modo) {
 		try {
-			getConnection();
+			getNewConnection();
 			// Get the JDBC driver name and version
 			DatabaseMetaData dbmd = connection.getMetaData();
 			System.out.println("Driver Name: " + dbmd.getDriverName());
@@ -62,7 +62,7 @@ public class DataBase {
 	 * @return the connection
 	 * @throws SQLException
 	 */
-	public OracleConnection getConnection() throws SQLException {
+	private OracleConnection getNewConnection() throws SQLException {
 		Properties info = new Properties();
 		info.put(OracleConnection.CONNECTION_PROPERTY_USER_NAME, DB_USER);
 		info.put(OracleConnection.CONNECTION_PROPERTY_PASSWORD, DB_PASSWORD);
@@ -74,6 +74,13 @@ public class DataBase {
 		ods.setConnectionProperties(info);
 
 		connection = (OracleConnection) ods.getConnection();
+		return connection;
+	}
+	
+	public OracleConnection getConnection() throws SQLException {
+		if (connection.isClosed()) {
+			return getNewConnection();
+		}
 		return connection;
 	}
 
