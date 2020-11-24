@@ -203,9 +203,6 @@ public class VentanaPedidosProveedor extends JFrame {
 	private void cargarPedidos() {
 		PedidosDataBase cdb = new PedidosDataBase(db);
 		pedidos=cdb.getPedidos();
-//		var lista=new ArrayList<Producto>();
-//		lista.add(new Producto("mesa alta", "mesa", "001", 10));
-//		pedidos.add(new Pedido(1, 10, "SOLICITADO", lista));
 	}	
 	
 	private JLabel getLblTitle() {
@@ -245,7 +242,7 @@ public class VentanaPedidosProveedor extends JFrame {
 			for(int i =0;i<pedidos.size();i++) {
 				tablePedidos.setValueAt(Claves.toClave(pedidos.get(i).getPedido_id()), i, 0);
 				tablePedidos.setValueAt(pedidos.get(i).getEstado(),i, 1);
-				tablePedidos.setValueAt(pedidos.get(i).getTotal_price(),i, 2);
+				tablePedidos.setValueAt(String.format("%.2f", pedidos.get(i).getTotal_price()),i, 2);
 			}
 		}
 		return tablePedidos;

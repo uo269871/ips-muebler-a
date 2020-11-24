@@ -236,8 +236,12 @@ public class VentanaTransporte extends JFrame {
 						ejecutarVentanaMontar();
 						dispose();
 					}
-					else
-						JOptionPane.showMessageDialog(getContentPane(), "No hay productos seleccionados para transportar");
+					else {
+						int option=JOptionPane.showConfirmDialog(getContentPane(), "No hay productos seleccionados para transportar. ¿Desea continuar?","Transporte",JOptionPane.YES_NO_OPTION);
+						if(option==0) {
+							dispose();
+						}
+					}
 				}
 			});
 			btnSiguiente.setMargin(new Insets(0, 0, 0, 0));

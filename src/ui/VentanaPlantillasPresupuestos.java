@@ -221,7 +221,7 @@ public class VentanaPlantillasPresupuestos extends JFrame {
 			price+=aux.getPrice()*aux.getUds();
 		}
 		if(price!=0) {
-			getTxtTotal().setText("Total: "+price);
+			getTxtTotal().setText("Total: "+String.format("%.2f", price));
 		}else {
 			getTxtTotal().setText("Total: ");
 		}
@@ -315,8 +315,8 @@ public class VentanaPlantillasPresupuestos extends JFrame {
 			Vector<String> v= new Vector<String>();
 			v.add(pr.getName());
 			v.add(pr.getType());
-			v.add(pr.getPrice()+"");
-			v.add(pr.getUds()+"");
+			v.add(String.format("%.2f", pr.getPrice()));
+			v.add(String.valueOf(pr.getUds()));
 			modeloTablePresupesto.addRow(v);
 			presupuesto.add(pr);
 		}

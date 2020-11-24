@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -194,28 +195,74 @@ public class VentanaCrearPedido extends JFrame {
 			btnAddToPedido.setMnemonic('t');
 			btnAddToPedido.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					for(int i=0;i<getTableAlmacen().getSelectedRows().length;i++)
+					for(int i=0;i<getTableAlmacen().getSelectedRows().length;i++) {
+						String parse=JOptionPane.showInputDialog(getContentPane(), "¿Cuantas Uds desearía añadir?","Error en el formato",JOptionPane.QUESTION_MESSAGE);
+						int udsToAdd=0;
+						try {
+							udsToAdd = Integer.parseInt(parse);
+						}catch (Exception ex){
+							JOptionPane.showMessageDialog(getContentPane(), "El formato de las unidades a añadir no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
+							break;
+						}
 						if(!pedido.contains(almacen.get(getTableAlmacen().getSelectedRows()[i]))) {
 							Vector<String> v= new Vector<String>();
-							v.add(almacen.get(getTableAlmacen().getSelectedRows()[i]).getProduct_id());
-							v.add(almacen.get(getTableAlmacen().getSelectedRows()[i]).getName());
+							double des=1;
+							double precio=almacen.get(getTableAlmacen().getSelectedRows()[i]).getPrice();
+							String name=almacen.get(getTableAlmacen().getSelectedRows()[i]).getName();
+							v.add(name);
 							v.add(almacen.get(getTableAlmacen().getSelectedRows()[i]).getType());
-							v.add(String.valueOf(1));
-							v.add(String.valueOf(almacen.get(getTableAlmacen().getSelectedRows()[i]).getPrice()));
+							v.add(String.format("%.2f", precio));
+							v.add(String.valueOf(udsToAdd));
+							if(udsToAdd>=50) {
+								JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 20%");
+								v.add("20%");
+								des=0.8;
+								}else if(udsToAdd>=20) {
+								JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 10%");
+								v.add("10%");
+								des=0.9;
+							}else if(udsToAdd>=10) {
+								JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 5%");
+								v.add("5%");
+								des=0.95;
+							}else {
+								JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 0%");
+								v.add("0%");
+								des=1;
+							}
+							v.add(String.format("%.2f", udsToAdd*precio*des));
 							modeloTablePedido.addRow(v);
-//							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 3);
-//							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 4);
-							pedido.add(new Producto(almacen.get(getTableAlmacen().getSelectedRows()[i]),1));
+							pedido.add(new Producto(almacen.get(getTableAlmacen().getSelectedRows()[i]),udsToAdd));
 						}else {
 							for(int j=0;j<modeloTablePedido.getRowCount();j++) {
-								if(almacen.get(getTableAlmacen().getSelectedRows()[i]).getName().equals(modeloTablePedido.getValueAt(j, 1))) {
+								if(almacen.get(getTableAlmacen().getSelectedRows()[i]).getName().equals(modeloTablePedido.getValueAt(j, 0))) {
 									Vector<String> v= new Vector<String>();
-									v.add(almacen.get(getTableAlmacen().getSelectedRows()[i]).getProduct_id());
-									v.add(almacen.get(getTableAlmacen().getSelectedRows()[i]).getName());
+									double des=1;
+									double precio=almacen.get(getTableAlmacen().getSelectedRows()[i]).getPrice();
+									String name=almacen.get(getTableAlmacen().getSelectedRows()[i]).getName();
+									v.add(name);
 									v.add(almacen.get(getTableAlmacen().getSelectedRows()[i]).getType());
-									int uds=Integer.parseInt(modeloTablePedido.getValueAt(j, 3).toString())+1;
-									v.add(uds+"");
-									v.add(String.valueOf(almacen.get(getTableAlmacen().getSelectedRows()[i]).getPrice()));
+									int uds=Integer.parseInt(modeloTablePedido.getValueAt(j, 4).toString())+udsToAdd;
+									v.add(String.format("%.2f", precio));
+									v.add(String.valueOf(uds));
+									if(uds>=50) {
+										JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 20%");
+										v.add("20%");
+										des=0.8;
+										}else if(uds>=20) {
+										JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 10%");
+										v.add("10%");
+										des=0.9;
+									}else if(uds>=10) {
+										JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 5%");
+										v.add("5%");
+										des=0.95;
+									}else {
+										JOptionPane.showMessageDialog(getContentPane(), "Su lote de productos de: "+name+", recibirá un descuento del 0%");
+										v.add("0%");
+										des=1;
+									}
+									v.add(String.format("%.2f", uds*precio*des));
 									modeloTablePedido.removeRow(j);
 									modeloTablePedido.addRow(v);
 									Producto pr=new Producto(almacen.get(getTableAlmacen().getSelectedRows()[i]),uds);
@@ -225,6 +272,7 @@ public class VentanaCrearPedido extends JFrame {
 								}
 							}
 						}
+					}
 					actualizaPrecio();
 					changeEnableSave();
 					repaint();
@@ -241,10 +289,18 @@ public class VentanaCrearPedido extends JFrame {
 	private float actualizaPrecio() {
 		float price=0;
 		for(Producto aux:pedido) {
-			price+=aux.getPrice()*aux.getUds();
+			if(aux.getUds()<10) {
+				price+=aux.getUds()*aux.getPrice();
+			}else if(aux.getUds()<20) {
+				price+=((aux.getUds()*aux.getPrice())*0.95);
+			}else if(aux.getUds()<50) {
+				price+=((aux.getUds()*aux.getPrice())*0.9);
+			}else {
+				price+=((aux.getUds()*aux.getPrice())*0.8);
+			}
 		}
 		if(price!=0) {
-			getTxtTotal().setText("Total: "+price);
+			getTxtTotal().setText("Total: "+String.format("%.2f", price));
 		}else {
 			getTxtTotal().setText("Total: ");
 		}
@@ -301,6 +357,7 @@ public class VentanaCrearPedido extends JFrame {
 		PedidosDataBase pdb=new PedidosDataBase(db);
 		Pedido pedido= new Pedido(pdb.getPedidos().size()+1,actualizaPrecio(),"SOLICITADO",this.pedido);
 		pdb.addPedido(pedido);
+		dispose();
 	}
 
 	/** Método que devuelve o crea y devuelve el botón de borrar si no existe
@@ -384,7 +441,6 @@ public class VentanaCrearPedido extends JFrame {
 		if (tableAlmacen == null) {
 			int rows= almacen.size();
 			Vector<String> v= new Vector<String>();
-			v.add("Id");
 			v.add("Nombre");
 			v.add("Tipo");
 			v.add("Uds");
@@ -399,10 +455,9 @@ public class VentanaCrearPedido extends JFrame {
 			tableAlmacen = new JTable(modeloTableAlmacen);
 			tableAlmacen.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			for(int i =0;i<almacen.size();i++) {
-				tableAlmacen.setValueAt(almacen.get(i).getProduct_id(),i, 0);
-				tableAlmacen.setValueAt(almacen.get(i).getName(), i, 1);
-				tableAlmacen.setValueAt(almacen.get(i).getType(),i, 2);
-				tableAlmacen.setValueAt(almacen.get(i).getUds(),i, 3);
+				tableAlmacen.setValueAt(almacen.get(i).getName(), i, 0);
+				tableAlmacen.setValueAt(almacen.get(i).getType(),i, 1);
+				tableAlmacen.setValueAt(almacen.get(i).getUds(),i, 2);
 			}
 		}
 		return tableAlmacen;
@@ -411,11 +466,12 @@ public class VentanaCrearPedido extends JFrame {
 	private JTable getTablePedido() {
 		if (tablePedido == null) {
 			Vector<String> v= new Vector<String>();
-			v.add("Id");
 			v.add("Nombre");
 			v.add("Tipo");
-			v.add("Unidades");
 			v.add("Precio/Unidad");
+			v.add("Unidades");
+			v.add("Descuento");
+			v.add("PrecioTotal");
 			modeloTablePedido = new DefaultTableModel(v,pedido.size()) {
 
 			    /**
