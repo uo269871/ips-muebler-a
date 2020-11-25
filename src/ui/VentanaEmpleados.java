@@ -115,8 +115,10 @@ public class VentanaEmpleados extends JFrame {
 				table.setValueAt(empleados.get(i).getNombre(), i, 0);
 				table.setValueAt(empleados.get(i).getDni(), i, 1);
 				if (isTransportista(empleados.get(i))) {
+					empleados.get(i).isTransportista();
 					table.setValueAt("Transportista", i, 2);
 				} else {
+					empleados.get(i).isVendedor();
 					table.setValueAt("Vendedor", i, 2);
 				}
 
@@ -197,7 +199,7 @@ public class VentanaEmpleados extends JFrame {
 		empleados = edb.getEmpleados();
 		int pos = table.getSelectedRow();
 
-		String emp = empleados.get(pos).getId();
+		Empleado emp = empleados.get(pos);
 		edb.deleteEmpleado(emp);
 		empleados = edb.getEmpleados();
 		actualizarTabla();

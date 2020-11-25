@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,7 +21,6 @@ import javax.swing.border.TitledBorder;
 import business.bbdd.DataBase;
 import business.clientes.ClientesDataBase;
 import business.logic.Cliente;
-import util.Claves;
 
 /**
  * @author UO270656
@@ -151,10 +150,8 @@ public class VentanaRegistro extends JDialog {
 	
 	private void nuevoCliente() {
 		ClientesDataBase cdb = new ClientesDataBase(db);
-		List<Cliente> clientes=cdb.getClientes();
-		int id=Integer.parseInt(clientes.get(clientes.size()-1).getClient_id());
-		id++;
-		cdb.addCliente(new Cliente(getTxtNombre().getText(),getTxtDNI().getText(),Claves.toClave(id),getTxtDireccion().getText()));
+		String id = UUID.randomUUID().toString();
+		cdb.addCliente(new Cliente(getTxtNombre().getText(),getTxtDNI().getText(),id,getTxtDireccion().getText()));
 	}
 	
 	/** Método que devuelve o crea y devuelve la etiqueta que indica el Nombre y los apellidos del cliente si no existe

@@ -21,7 +21,7 @@ public class VendedoresDataBase {
 		Statement st;
 		try {
 			st = db.getConnection().createStatement();
-			st.executeQuery("INSERT INTO IPS_VENDEDORES(id,id_empleado) values(" + id +","+id_empleado+")");
+			st.executeQuery("INSERT INTO IPS_VENDEDORES(id,id_empleado) values('" + id +"','"+id_empleado+"')");
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

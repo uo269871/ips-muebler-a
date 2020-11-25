@@ -2,13 +2,14 @@ package ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.UUID;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -256,11 +257,11 @@ public class VentanaAñadir extends JFrame {
 	private void añadirEmpleado() {
 		EmpleadosDataBase edb = new EmpleadosDataBase(db);
 		Empleado emp = new Empleado();
-		List<Empleado> aux = edb.getEmpleados();
-		int i = Integer.parseInt(aux.get(aux.size()-1).getId());
-		String id = String.valueOf(i + 1);
-		
-		emp.setId(id);
+//		List<Empleado> aux = edb.getEmpleados();
+//		int i = Integer.parseInt(aux.get(aux.size()-1).getId());
+//		String id = String.valueOf(i + 1);
+
+		emp.setId(UUID.randomUUID().toString());
 		emp.setNombre(getTxtNombre().getText() + " " + getTxtApellidos().getText());
 		emp.setDir(getTxtDireccion().getText());
 		emp.setDni(getTxtDni().getText());
@@ -275,21 +276,20 @@ public class VentanaAñadir extends JFrame {
 			emp.setMinuto_entrada(Integer.parseInt(horaEnt.split(":")[1]));
 			emp.setHora_salida(Integer.parseInt(horaFin.split(":")[0]));
 			emp.setMinuto_salida(Integer.parseInt(horaFin.split(":")[1]));
-			
-			
-			
-			if(getComboBox().getSelectedIndex() == 1) {
+
+			if (getComboBox().getSelectedIndex() == 1) {
 				emp.isVendedor();
-			} else if(getComboBox().getSelectedIndex() == 0) {
+			} else if (getComboBox().getSelectedIndex() == 0) {
 				emp.isTransportista();
 			}
-			
+
 			edb.addEmpleado(emp);
-			
+
 			VentanaEmpleados.run(db);
 			dispose();
 		} catch (Exception e) {
-			
+			JOptionPane.showMessageDialog(this, "El empleado no fue añadido", getTitle(), JOptionPane.ERROR_MESSAGE,
+					null);
 			return;
 		}
 	}

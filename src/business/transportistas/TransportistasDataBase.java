@@ -18,11 +18,11 @@ public class TransportistasDataBase {
 		this.db = db;
 	}
 	
-	public void addTransportista(String dni, String id_empleado) {
+	public void addTransportista(String id, String id_empleado) {
 		Statement st;
 		try {
 			st = db.getConnection().createStatement();
-			st.executeQuery("INSERT INTO IPS_TRANSPORTISTAS(dni,id_empleado) values(" + dni +","+id_empleado+")");
+			st.executeQuery("INSERT INTO IPS_TRANSPORTISTAS(id,id_empleado) values('" + id +"','"+id_empleado+"')");
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

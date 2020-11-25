@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -31,7 +32,6 @@ import business.logic.Venta;
 import business.pedidos.PedidosDataBase;
 import business.presupuestos.PresupuestosDataBase;
 import business.ventas.VentaDataBase;
-import util.Claves;
 
 public class VentanaVentas extends JFrame {
 
@@ -172,17 +172,17 @@ public class VentanaVentas extends JFrame {
 	private void aceptarPresupuesto() {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
 		VentaDataBase vdb = new VentaDataBase(db);
-		int id = vdb.getNumeroVentas() + 1;
+		String id = UUID.randomUUID().toString();
 		int pos = table.getSelectedRow();
 		Presupuesto p = presupuestos.get(pos);
-		v = new Venta(Claves.toClave(id),p.getClient_id(), new Date(System.currentTimeMillis()));
+		v = new Venta(id,p.getClient_id(), new Date(System.currentTimeMillis()));
 		List<Producto> products = pdb.getProductosPresupuesto(p.getPresupuesto_id());
 		vdb.addVenta(v, products);
 		modificarAlmacen(products,id);
 		pdb.eliminarPresupuesto(p.getPresupuesto_id());
 	}
 	
-	private void modificarAlmacen(List<Producto> products, int id) {
+	private void modificarAlmacen(List<Producto> products, String id) {
 		List<Producto> productosAAñadir=new ArrayList<Producto>();
 		AlmacenDataBase adb= new AlmacenDataBase(db);
 		CatalogoDataBase cdb=new CatalogoDataBase(db);
@@ -207,7 +207,7 @@ public class VentanaVentas extends JFrame {
 				amount+=aux.getUds()*aux.getPrice();
 			}
 			int id_pedido=pdb.getPedidos().size()+1;
-			Pedido pedido= new Pedido(id_pedido, amount, "ENCARGADO PARA V:"+Claves.toClave(id), productosAAñadir);
+			Pedido pedido= new Pedido(id_pedido, amount, "ENCARGADO PARA V:"+id, productosAAñadir);
 			pdb.addPedido(pedido);
 		}
 	}

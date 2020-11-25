@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -513,8 +514,8 @@ public class VentanaMontar extends JFrame {
 						if (tr != null) {
 							TransportesDataBase tdb = new TransportesDataBase(db);
 							VentaDataBase vdb = new VentaDataBase(db);
-							int id = tdb.getNumeroTransportes() + 1;
-							Transporte transporte = new Transporte(String.valueOf(id), venta.getVenta_Id(), tr.getDni(),
+							String id = UUID.randomUUID().toString();
+							Transporte transporte = new Transporte(id, venta.getVenta_Id(), tr.getDni(),
 									new Date((int) getSpAño().getValue(), (int) cbMes.getSelectedItem(),
 											(int) cbDia.getSelectedItem()),
 									(int) cbHora.getSelectedItem(), (int) cbMinuto.getSelectedItem(), "PENDIENTE");

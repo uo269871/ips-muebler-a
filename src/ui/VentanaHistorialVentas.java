@@ -134,6 +134,7 @@ public class VentanaHistorialVentas extends JFrame {
 				precio += 5;
 			}
 		}
+		precio = (double) Math.round(precio * 100) / 100;
 		return precio;
 	}
 
@@ -171,6 +172,8 @@ public class VentanaHistorialVentas extends JFrame {
 			LocalDate max = LocalDate.parse(JOptionPane.showInputDialog(null, "Ponga una fecha de fin (YYYY-MM-DD):"));
 
 			if (min.isAfter(max)) {
+				JOptionPane.showMessageDialog(this, "El orden de fechas es incorrecto", getTitle(),
+						JOptionPane.INFORMATION_MESSAGE, null);
 				return;
 			}
 
@@ -196,7 +199,7 @@ public class VentanaHistorialVentas extends JFrame {
 			filtrado = true;
 			getBtnFiltrar().setText("Quitar filtro");
 		} catch (Exception e) {
-
+			JOptionPane.showMessageDialog(this, "El formato de fechas es incorrecto", getTitle(), JOptionPane.INFORMATION_MESSAGE, null);
 		}
 	}
 

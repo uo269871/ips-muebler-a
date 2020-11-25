@@ -166,8 +166,8 @@ public class VentanaPedidosProveedor extends JFrame {
 						AlmacenDataBase adb= new AlmacenDataBase(db);
 						Pedido pedido=cdb.getPedidoById(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 0).toString());
 						for(Producto pr:pedido.getProductos()) {
-							int udsI=adb.getUnidades(Claves.toClave(Integer.parseInt(pr.getProduct_id())));
-							pr.setProduct_id(Claves.toClave(Integer.parseInt(pr.getProduct_id())));
+							int udsI=adb.getUnidades(pr.getProduct_id());
+							pr.setProduct_id(pr.getProduct_id());
 							adb.addAlmacenProducto(pr, udsI+pr.getUds());
 						}
 					}else if(getTablePedidos().getValueAt(getTablePedidos().getSelectedRow(), 1).toString().substring(0, 9).equals("ENCARGADO")) {

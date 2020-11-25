@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -30,7 +31,6 @@ import business.logic.Cliente;
 import business.logic.Presupuesto;
 import business.logic.Producto;
 import business.presupuestos.PresupuestosDataBase;
-import util.Claves;
 /**
  * @author UO270656
  *  DNI 71732222Y
@@ -319,16 +319,16 @@ public class VentanaPresupuestos extends JFrame {
 	
 	private void guardarPresupuesto() {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
-		List<Presupuesto> presupuestos = pdb.getPresupuestos();
-		int id=1;
-		if(presupuestos.size()>0) {
-			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
-			id++;
-		}
+//		List<Presupuesto> presupuestos = pdb.getPresupuestos();
+//		int id=1;
+//		if(presupuestos.size()>0) {
+//			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
+//			id++;
+//		}
 		if(cliente!=null) {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), cliente.getClient_id()),presupuesto);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), UUID.randomUUID().toString(), cliente.getClient_id()),presupuesto);
 		}else {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), UUID.randomUUID().toString(), null),presupuesto);
 		}
 		//Eliminar del almacen las uds
 	}
@@ -594,7 +594,7 @@ public class VentanaPresupuestos extends JFrame {
 
 			filtroTipos = true;
 			getBtnFilterType().setText("Quitar filtro de tipo");
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 
 		}
 
@@ -644,7 +644,7 @@ public class VentanaPresupuestos extends JFrame {
 
 			getBtnFilterPrice().setText("Quitar filtro de precio");
 			filtroPrecios = true;
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 
 		}
 
