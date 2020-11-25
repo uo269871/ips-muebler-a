@@ -199,7 +199,11 @@ public class VentanaCrearPedido extends JFrame {
 						String parse=JOptionPane.showInputDialog(getContentPane(), "¿Cuantas Uds desearía añadir?","Error en el formato",JOptionPane.QUESTION_MESSAGE);
 						int udsToAdd=0;
 						try {
-							udsToAdd = Integer.parseInt(parse);
+							if(parse!=null) {
+								udsToAdd = Integer.parseInt(parse);
+							}else {
+								return;
+							}
 						}catch (Exception ex){
 							JOptionPane.showMessageDialog(getContentPane(), "El formato de las unidades a añadir no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 							break;
