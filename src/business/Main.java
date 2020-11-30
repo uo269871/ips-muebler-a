@@ -1,6 +1,3 @@
-/**
- * 
- */
 package business;
 
 import business.bbdd.DataBase;

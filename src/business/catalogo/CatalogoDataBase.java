@@ -150,7 +150,7 @@ public class CatalogoDataBase {
 		double precio=0.0;
 		try {
 			PreparedStatement st = db.getConnection().prepareStatement("SELECT PRICE FROM  IPS_PRODUCTOS WHERE product_id=?");
-			st.setString(1, Claves.toClave(Integer.parseInt(id)));
+			st.setString(1, id);
 			ResultSet rs=st.executeQuery();
 		    if(rs.next()) {
 		    	precio = rs.getFloat("price");
