@@ -21,6 +21,7 @@ public class VentanaGerente extends JFrame {
 	
 	private DataBase db;
 	private JButton btnNewButton;
+	private JButton btnBalance;
 
 	/**
 	 * Launch the application.
@@ -49,6 +50,7 @@ public class VentanaGerente extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.add(getBtnAlmacen());
 		contentPane.add(getBtnNewButton());
+		contentPane.add(getBtnBalance());
 	}
 
 	private JButton getBtnAlmacen() {
@@ -56,7 +58,9 @@ public class VentanaGerente extends JFrame {
 			btnAlmacen = new JButton("Ver almac\u00E9n");
 			btnAlmacen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaAlmacen.run(db);
+					VentanaAlmacen frame = new VentanaAlmacen(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
 			btnAlmacen.setBounds(125, 73, 184, 23);
@@ -68,11 +72,25 @@ public class VentanaGerente extends JFrame {
 			btnNewButton = new JButton("Administrar empleados");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaEmpleados.run(db);
+					VentanaEmpleados frame = new VentanaEmpleados(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
-			btnNewButton.setBounds(125, 136, 184, 23);
+			btnNewButton.setBounds(125, 133, 184, 23);
 		}
 		return btnNewButton;
+	}
+	private JButton getBtnBalance() {
+		if (btnBalance == null) {
+			btnBalance = new JButton("Ver balance");
+			btnBalance.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaBalance.run(db);
+				}
+			});
+			btnBalance.setBounds(125, 191, 184, 23);
+		}
+		return btnBalance;
 	}
 }

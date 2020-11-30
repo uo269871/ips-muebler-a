@@ -173,8 +173,10 @@ public class VentanaDetallesPedido extends JFrame {
 			Vector<String> v= new Vector<String>();
 			v.add("Nombre Producto");
 			v.add("Tipo");
-			v.add("Precio");
+			v.add("Precio/Uds");
 			v.add("Unidades");
+			v.add("Descuento");
+			v.add("PrecioTotal");
 			modeloTablePedidos = new DefaultTableModel(v,pedido.getProductos().size()) {
 
 			    /**
@@ -194,11 +196,31 @@ public class VentanaDetallesPedido extends JFrame {
 			tablePedidos = new JTable(modeloTablePedidos);
 			tablePedidos.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			
+			double precio=0;
+			int uds=0;
+			double des=1;
+			
 			for(int i =0;i<pedido.getProductos().size();i++) {
 				tablePedidos.setValueAt(pedido.getProductos().get(i).getName(), i, 0);
 				tablePedidos.setValueAt(pedido.getProductos().get(i).getType(),i, 1);
-				tablePedidos.setValueAt(pedido.getProductos().get(i).getPrice(),i, 2);
-				tablePedidos.setValueAt(pedido.getProductos().get(i).getUds(),i, 3);
+				uds=pedido.getProductos().get(i).getUds();
+				precio=pedido.getProductos().get(i).getPrice();
+				tablePedidos.setValueAt(String.format("%.2f", precio),i, 2);
+				tablePedidos.setValueAt(uds,i, 3);
+				if(uds<10) {
+					tablePedidos.setValueAt("0%",i, 4);
+					des=1;
+				}else if(uds<20) {
+					tablePedidos.setValueAt("5%",i, 4);
+					des=0.95;
+				}else if(uds<50) {
+					tablePedidos.setValueAt("10%",i, 4);
+					des=0.9;
+				}else {
+					tablePedidos.setValueAt("20%",i, 4);
+					des=0.8;
+				}
+				tablePedidos.setValueAt(String.format("%.2f", uds*precio*des),i, 5);
 			}
 		}
 		return tablePedidos;

@@ -61,12 +61,21 @@ public class PedidosDataBase {
 			pst.close();
 //			db.cierraConexion();
 			pst = db.getConnection().prepareStatement(
-					"insert into ips_pedido_producto(pedido_id,product_id,unidades,price) values (?,?,?,?)");
+					"insert into ips_pedido_producto(pedido_id,product_id,unidades,price,descuento) values (?,?,?,?,?)");
 			for(Producto pr:pedido.getProductos()) {
 				pst.setString(1, Claves.toClave(pedido.getPedido_id()));
 				pst.setString(2, pr.getProduct_id());
 				pst.setInt(3, pr.getUds());
 				pst.setFloat(4, pr.getPrice());
+				if(pr.getUds()<10) {
+					pst.setInt(5, 0);
+				}else if(pr.getUds()<20) {
+					pst.setInt(5, 5);
+				}else if(pr.getUds()<50) {
+					pst.setInt(5, 10);
+				}else {
+					pst.setInt(5, 20);
+				}
 				pst.executeUpdate();
 				
 			}

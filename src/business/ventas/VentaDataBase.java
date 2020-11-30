@@ -186,5 +186,26 @@ public class VentaDataBase {
 
 		return b;
 	}
+	
+	public int getUnidades(String ventaId, String productId) {
+		int uds = 0;
+		try {
+			PreparedStatement pst = db.getConnection()
+					.prepareStatement("select unidades from ips_ventas_productos where venta_id = ? and product_id = ?");
+			pst.setString(1, ventaId);
+			pst.setString(2, productId);
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				uds = rs.getInt("unidades");
+			}
+			db.cierraConexion();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return uds;
+	}
 
 }

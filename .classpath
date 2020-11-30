@@ -10,6 +10,13 @@
 	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/mchange-commons-java-0.2.10.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc8.jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="lib/pdfbox-app-2.0.21.jar"/>
+=======
+	<classpathentry kind="lib" path="lib/activation-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.23.jar"/>
+>>>>>>> refs/remotes/origin/master
 	<classpathentry kind="output" path="bin"/>
 </classpath>

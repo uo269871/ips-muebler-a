@@ -24,8 +24,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
+import business.clientes.ClientesDataBase;
+import business.logic.Cliente;
 import business.logic.Transporte;
+import business.logic.Venta;
 import business.transportes.TransportesDataBase;
+import business.ventas.VentaDataBase;
+import util.Correo;
 
 public class VentanaEstado extends JFrame {
 
@@ -57,6 +62,8 @@ public class VentanaEstado extends JFrame {
 	private JPanel panelTransporte;
 	private JLabel Transporte;
 	private JComboBox<Transporte> cbTransporte;
+	
+	private Correo correo = new Correo();
 
 	/**
 	 * Launch the application.
@@ -84,6 +91,29 @@ public class VentanaEstado extends JFrame {
 		contentPane.add(getPanelNorte(), BorderLayout.NORTH);
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
 		contentPane.add(getPanelSur(), BorderLayout.SOUTH);
+		checkEstado();
+		
+	}
+	
+	private Cliente getCliente() {
+		VentaDataBase vdb = new VentaDataBase(db);
+		ClientesDataBase cdb = new ClientesDataBase(db);
+		String id = "";
+		List<Venta> ventas = vdb.getVentas();
+		List<Cliente> clientes = cdb.getClientes();
+		for (Venta v : ventas) {
+			if (transporte.getId_venta() == v.getVenta_Id())
+				id = v.getClient_Id();
+		}
+		if (id == "")
+			JOptionPane.showMessageDialog(null, "Error no hay cliente");
+		else {
+			for (Cliente c : clientes) {
+				if (c.getClient_id() == id)
+					return c;
+			}
+		}
+		return null;
 	}
 
 	private JPanel getPanelNorte() {
@@ -301,32 +331,23 @@ public class VentanaEstado extends JFrame {
 			btnCambiarEstado.addActionListener(new ActionListener() {
 				@SuppressWarnings("deprecation")
 				public void actionPerformed(ActionEvent e) {
-					if (LocalDate.now().isAfter(LocalDate.of((int)spAño.getValue(), (int)cbMes.getSelectedItem(), (int)cbDia.getSelectedItem()))) {
-						transporte.setEstado("RETRASADO");
-						txEstado.setText(transporte.getEstado());
-						JOptionPane.showConfirmDialog(getParent(), "¡Transporte retrasado!\nSeleccione una nueva fecha de entrega");
-						spAño.setEnabled(true);
-						cbDia.setEnabled(true);
-						cbMes.setEnabled(true);
-						TransportesDataBase tdb = new TransportesDataBase(db);
-						tdb.updateEstado(transporte, transporte.getEstado());
-					}
-					else if (transporte.getEstado().equals("PENDIENTE")) {
+					if (transporte.getEstado().equals("PENDIENTE")) {
 						transporte.setEstado("EN TRANSITO");
 						txEstado.setText(transporte.getEstado());
 						TransportesDataBase tdb = new TransportesDataBase(db);
 						tdb.updateEstado(transporte, transporte.getEstado());
-					}
-					else if (transporte.getEstado().equals("EN TRANSITO")) {
+						correo.sendEmail(getCliente().getEmail(), new Date((int) spAño.getValue(), (int) cbMes.getSelectedItem(),
+								(int) cbDia.getSelectedItem()));
+					} else if (transporte.getEstado().equals("EN TRANSITO")) {
 						transporte.setEstado("ENTREGADO");
 						txEstado.setText(transporte.getEstado());
 						TransportesDataBase tdb = new TransportesDataBase(db);
 						tdb.updateEstado(transporte, transporte.getEstado());
-					}
-					else if (transporte.getEstado().equals("RETRASADO")) {
+					} else if (transporte.getEstado().equals("RETRASADO")) {
 						transporte.setEstado("PENDIENTE");
 						txEstado.setText(transporte.getEstado());
-						transporte.setDia_entrega(new Date((int)spAño.getValue(), (int)cbMes.getSelectedItem(), (int)cbDia.getSelectedItem()));
+						transporte.setDia_entrega(new Date((int) spAño.getValue(), (int) cbMes.getSelectedItem(),
+								(int) cbDia.getSelectedItem()));
 						spAño.setEnabled(false);
 						cbDia.setEnabled(false);
 						cbMes.setEnabled(false);
@@ -389,4 +410,21 @@ public class VentanaEstado extends JFrame {
 		Transporte[] transportes = trs.toArray(new Transporte[trs.size()]);
 		return transportes;
 	}
+
+	private void checkEstado() {
+		if (LocalDate.now().isAfter(
+				LocalDate.of((int) spAño.getValue(), (int) cbMes.getSelectedItem(), (int) cbDia.getSelectedItem()))) {
+			transporte.setEstado("RETRASADO");
+			txEstado.setText(transporte.getEstado());
+			JOptionPane.showConfirmDialog(getParent(), "¡Transporte retrasado!\nSeleccione una nueva fecha de entrega");
+			spAño.setEnabled(true);
+			cbDia.setEnabled(true);
+			cbMes.setEnabled(true);
+			TransportesDataBase tdb = new TransportesDataBase(db);
+			tdb.updateEstado(transporte, transporte.getEstado());
+		}
+	}
+
+	
+	 
 }

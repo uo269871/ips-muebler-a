@@ -145,4 +145,22 @@ public class CatalogoDataBase {
 
 		return tipos;
 	}
+	
+	public double getPrecio(String id) {
+		double precio=0.0;
+		try {
+			PreparedStatement st = db.getConnection().prepareStatement("SELECT PRICE FROM  IPS_PRODUCTOS WHERE product_id=?");
+			st.setString(1, Claves.toClave(Integer.parseInt(id)));
+			ResultSet rs=st.executeQuery();
+		    if(rs.next()) {
+		    	precio = rs.getFloat("price");
+		    }
+		    rs.close();
+		    st.close();
+		    db.cierraConexion();
+		}catch(SQLException e){
+			System.out.println("Error while operating the database " + e.getMessage());
+	    }
+		return precio;
+    }
 }

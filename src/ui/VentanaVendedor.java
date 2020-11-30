@@ -23,6 +23,7 @@ public class VentanaVendedor extends JFrame {
 	private JButton btnHistorialPedidosAl;
 	
 	private DataBase db;
+	private JButton btnCrearPedido;
 
 	/**
 	 * Launch the application.
@@ -52,6 +53,7 @@ public class VentanaVendedor extends JFrame {
 		contentPane.add(getBtnAceptarPresupuesto());
 		contentPane.add(getBtnHistorialDeVentas());
 		contentPane.add(getBtnHistorialPedidosAl());
+		contentPane.add(getBtnCrearPedido());
 	}
 
 	private JButton getBtnCrearPresupuesto() {
@@ -64,7 +66,7 @@ public class VentanaVendedor extends JFrame {
 					frame.setVisible(true);
 				}
 			});
-			btnCrearPresupuesto.setBounds(153, 45, 143, 20);
+			btnCrearPresupuesto.setBounds(153, 35, 143, 20);
 		}
 		return btnCrearPresupuesto;
 	}
@@ -78,7 +80,7 @@ public class VentanaVendedor extends JFrame {
 					frame.setVisible(true);
 				}
 			});
-			btnAceptarPresupuesto.setBounds(146, 90, 156, 20);
+			btnAceptarPresupuesto.setBounds(146, 80, 156, 20);
 		}
 		return btnAceptarPresupuesto;
 	}
@@ -92,7 +94,7 @@ public class VentanaVendedor extends JFrame {
 					frame.setVisible(true);
 				}
 			});
-			btnHistorialDeVentas.setBounds(142, 135, 165, 20);
+			btnHistorialDeVentas.setBounds(142, 125, 165, 20);
 		}
 		return btnHistorialDeVentas;
 	}
@@ -106,8 +108,22 @@ public class VentanaVendedor extends JFrame {
 					frame.setVisible(true);
 				}
 			});
-			btnHistorialPedidosAl.setBounds(106, 180, 237, 20);
+			btnHistorialPedidosAl.setBounds(106, 215, 237, 20);
 		}
 		return btnHistorialPedidosAl;
+	}
+	private JButton getBtnCrearPedido() {
+		if (btnCrearPedido == null) {
+			btnCrearPedido = new JButton("Hacer pedido al proveedor");
+			btnCrearPedido.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaCrearPedido frame = new VentanaCrearPedido(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
+				}
+			});
+			btnCrearPedido.setBounds(106, 170, 237, 20);
+		}
+		return btnCrearPedido;
 	}
 }

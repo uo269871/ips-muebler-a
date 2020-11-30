@@ -80,6 +80,7 @@ public class VentanaMontar extends JFrame {
 	private DefaultTableModel modeloTableTransporte;
 	private DefaultTableModel modeloTableMontaje;
 	private JSpinner spAño;
+	private JLabel lblFecha;
 
 	/**
 	 * Launch the application.
@@ -346,7 +347,8 @@ public class VentanaMontar extends JFrame {
 	private JPanel getPanelFecha() {
 		if (panelFecha == null) {
 			panelFecha = new JPanel();
-			panelFecha.setLayout(new GridLayout(0, 10, 0, 0));
+			panelFecha.setLayout(new GridLayout(0, 11, 0, 0));
+			panelFecha.add(getLblFecha());
 			panelFecha.add(getLblAño());
 			panelFecha.add(getSpAño());
 			panelFecha.add(getLblMes());
@@ -554,5 +556,14 @@ public class VentanaMontar extends JFrame {
 			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(2020), 0, null, Integer.valueOf(50)));
 		}
 		return spAño;
+	}
+	
+	private JLabel getLblFecha() {
+		if (lblFecha == null) {
+			lblFecha = new JLabel("Fecha:");
+			lblFecha.setHorizontalAlignment(SwingConstants.CENTER);
+			lblFecha.setFont(new Font("Dialog", Font.BOLD, 14));
+		}
+		return lblFecha;
 	}
 }
