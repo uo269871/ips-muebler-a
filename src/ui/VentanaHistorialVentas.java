@@ -4,12 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,12 +19,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import business.bbdd.DataBase;
 import business.logic.Producto;
 import business.logic.Venta;
 import business.ventas.VentaDataBase;
+import javax.swing.ListSelectionModel;
 
 public class VentanaHistorialVentas extends JFrame {
 
@@ -40,6 +50,8 @@ public class VentanaHistorialVentas extends JFrame {
 	private JPanel panelBotones;
 	private JButton btnFiltrar;
 	private boolean filtrado = false;
+	private JButton btnFactura;
+	private JButton btnDetalles;
 
 	public static void run(DataBase db) {
 		try {
@@ -111,6 +123,7 @@ public class VentanaHistorialVentas extends JFrame {
 			};
 
 			table = new JTable(modeloTableVenta);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			for (int i = 0; i < ventas.size(); i++) {
 				String id = ventas.get(i).getVenta_Id();
@@ -142,6 +155,8 @@ public class VentanaHistorialVentas extends JFrame {
 		if (panelBotones == null) {
 			panelBotones = new JPanel();
 			panelBotones.add(getBtnFiltrar());
+			panelBotones.add(getBtnDetalles());
+			panelBotones.add(getBtnFactura());
 		}
 		return panelBotones;
 	}
@@ -199,7 +214,8 @@ public class VentanaHistorialVentas extends JFrame {
 			filtrado = true;
 			getBtnFiltrar().setText("Quitar filtro");
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "El formato de fechas es incorrecto", getTitle(), JOptionPane.INFORMATION_MESSAGE, null);
+			JOptionPane.showMessageDialog(this, "El formato de fechas es incorrecto", getTitle(),
+					JOptionPane.INFORMATION_MESSAGE, null);
 		}
 	}
 
@@ -224,5 +240,83 @@ public class VentanaHistorialVentas extends JFrame {
 	private void borrarTabla() {
 		modeloTableVenta.getDataVector().removeAllElements();
 		modeloTableVenta.fireTableDataChanged();
+	}
+
+	private JButton getBtnFactura() {
+		if (btnFactura == null) {
+			btnFactura = new JButton("Crear factura");
+			btnFactura.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					guardarFactura();
+				}
+			});
+		}
+		return btnFactura;
+	}
+
+	private void guardarFactura() {
+		JFileChooser guardar = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos PDF", "pdf");
+		Venta v = ventas.get(table.getSelectedRow());
+
+		guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		guardar.setFileFilter(filter);
+		guardar.setSelectedFile(new File("factura.pdf"));
+
+		int i = guardar.showSaveDialog(null);
+
+		if (i == JFileChooser.APPROVE_OPTION) {
+			String archivo = guardar.getSelectedFile().getAbsolutePath();
+			crearDocumentoPdf(archivo, v);
+		}
+
+	}
+
+	private void crearDocumentoPdf(String ruta, Venta v) {
+		if (!ruta.endsWith(".pdf")) {
+			JOptionPane.showMessageDialog(null, "Formato invalido", "IPS MUEBLERÍA - ERROR", JOptionPane.ERROR_MESSAGE,
+					null);
+			return;
+		}
+		try (PDDocument document = new PDDocument()) {
+			PDPage page = new PDPage(PDRectangle.A6);
+			document.addPage(page);
+
+			PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.TIMES_BOLD, 12);
+			contentStream.newLineAtOffset(20, page.getMediaBox().getHeight() - 52);
+			contentStream.showText("Id de la venta: " + v.getVenta_Id());
+			contentStream.newLineAtOffset(0, -15);
+			contentStream.showText("Fecha de la venta: " + v.getFechaEntrega());
+			contentStream.newLineAtOffset(0, -15);
+			double precio = getPrecioVenta(new VentaDataBase(db), v.getVenta_Id());
+			contentStream.showText("Precio de la venta: " + precio + "€");
+			contentStream.endText();
+
+			contentStream.close();
+
+			document.save(ruta);
+		} catch (Exception e) {
+
+		}
+	}
+
+	private JButton getBtnDetalles() {
+		if (btnDetalles == null) {
+			btnDetalles = new JButton("Ver detalles");
+			btnDetalles.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					verDetalles();
+				}
+			});
+		}
+		return btnDetalles;
+	}
+
+	private void verDetalles() {
+		Venta v = ventas.get(table.getSelectedRow());
+		VentanaDetallesVenta.run(v, db);
 	}
 }

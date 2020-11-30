@@ -29,7 +29,33 @@ public class TransportesDataBase {
 			if (rs.next()) {
 				String idt = rs.getString("id_transporte");
 				String id_venta = rs.getString("id_venta");
-				String dni_transportista = rs.getString("dni_transportista");
+				String dni_transportista = rs.getString("id_transportista");
+				Date dia = rs.getDate("dia_entrega");
+				int hora = rs.getInt("hora_entrega");
+				int minuto = rs.getInt("minuto_entrega");
+				String estado = rs.getString("estado");
+				Transporte t = new Transporte(idt, id_venta, dni_transportista, dia, hora, minuto, estado);
+				tr = t;
+			}
+			rs.close();
+			pst.close();
+//			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return tr;
+	}
+	
+	public Transporte getTransporteVenta(String id) {
+		Transporte tr = null;
+		try {
+			PreparedStatement pst = db.getConnection().prepareStatement("SELECT * FROM  IPS_TRANSPORTES WHERE id_venta = ?");
+			pst.setString(1, id);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				String idt = rs.getString("id_transporte");
+				String id_venta = rs.getString("id_venta");
+				String dni_transportista = rs.getString("id_transportista");
 				Date dia = rs.getDate("dia_entrega");
 				int hora = rs.getInt("hora_entrega");
 				int minuto = rs.getInt("minuto_entrega");
@@ -49,7 +75,7 @@ public class TransportesDataBase {
 	public boolean addTransportes(Transporte transporte) {
 		try {
 			PreparedStatement pst = db.getConnection().prepareStatement(
-					"insert into ips_transportes(id_transporte,id_venta,dni_transportista,dia_entrega,hora_entrega,minuto_entrega,estado) values (?,?,?,?,?,?,?)");
+					"insert into ips_transportes(id_transporte,id_venta,id_transportista,dia_entrega,hora_entrega,minuto_entrega,estado) values (?,?,?,?,?,?,?)");
 			pst.setString(1, transporte.getId_transporte());
 			pst.setString(2, transporte.getId_venta());
 			pst.setString(3, transporte.getDni_transportista());
@@ -63,7 +89,7 @@ public class TransportesDataBase {
 			pst.close();
 //			db.cierraConexion();
 		} catch (SQLException e) {
-			System.out.println("Error while operating the databasesds " + e.getMessage());
+			System.out.println("Error while operating the database " + e.getMessage());
 		}
 		return true;
 		

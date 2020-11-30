@@ -103,13 +103,13 @@ public class PresupuestosDataBase {
 	public void eliminarPresupuesto(String id) {
 		try {
 			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("delete from ips_presupuestos_productos where presupuesto_id = " + id);
+			ResultSet rs = st.executeQuery("delete from ips_presupuestos_productos where presupuesto_id = '" + id + "'");
 
 			rs.close();
 			st.close();
 			
 			st = db.getConnection().createStatement();
-			rs = st.executeQuery("delete from ips_presupuestos where presupuesto_id = " + id);
+			rs = st.executeQuery("delete from ips_presupuestos where presupuesto_id = '" + id + "'");
 			
 			
 //			db.cierraConexion();
@@ -122,7 +122,7 @@ public class PresupuestosDataBase {
 		ArrayList<Producto> productos = new ArrayList<Producto>();
 		try {
 			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_PRESUPUESTOS_PRODUCTOS WHERE PRESUPUESTO_ID = " + presupuesto_id);
+			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_PRESUPUESTOS_PRODUCTOS WHERE PRESUPUESTO_ID = '" + presupuesto_id+ "'");
 			while (rs.next()) {
 				String id = rs.getString("product_id");
 				int uds = rs.getInt("unidades");

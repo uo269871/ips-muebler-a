@@ -515,7 +515,7 @@ public class VentanaMontar extends JFrame {
 							TransportesDataBase tdb = new TransportesDataBase(db);
 							VentaDataBase vdb = new VentaDataBase(db);
 							String id = UUID.randomUUID().toString();
-							Transporte transporte = new Transporte(id, venta.getVenta_Id(), tr.getDni(),
+							Transporte transporte = new Transporte(id, venta.getVenta_Id(), tr.getId(),
 									new Date((int) getSpAño().getValue(), (int) cbMes.getSelectedItem(),
 											(int) cbDia.getSelectedItem()),
 									(int) cbHora.getSelectedItem(), (int) cbMinuto.getSelectedItem(), "PENDIENTE");
