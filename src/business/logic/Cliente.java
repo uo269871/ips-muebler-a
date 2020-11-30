@@ -10,6 +10,7 @@ public class Cliente {
 	private String dni;
 	private String client_id;
 	private String address;
+	private String email;
 	
 	public Cliente(String name, String dni, String client_id, String address) {
 		super();
@@ -69,6 +70,14 @@ public class Cliente {
 	 */
 	protected void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

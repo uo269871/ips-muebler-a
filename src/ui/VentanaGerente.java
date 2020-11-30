@@ -21,6 +21,7 @@ public class VentanaGerente extends JFrame {
 	
 	private DataBase db;
 	private JButton btnNewButton;
+	private JButton btnBalance;
 
 	/**
 	 * Launch the application.
@@ -49,6 +50,7 @@ public class VentanaGerente extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.add(getBtnAlmacen());
 		contentPane.add(getBtnNewButton());
+		contentPane.add(getBtnBalance());
 	}
 
 	private JButton getBtnAlmacen() {
@@ -71,8 +73,20 @@ public class VentanaGerente extends JFrame {
 					VentanaEmpleados.run(db);
 				}
 			});
-			btnNewButton.setBounds(125, 136, 184, 23);
+			btnNewButton.setBounds(125, 133, 184, 23);
 		}
 		return btnNewButton;
+	}
+	private JButton getBtnBalance() {
+		if (btnBalance == null) {
+			btnBalance = new JButton("Ver balance");
+			btnBalance.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaBalance.run(db);
+				}
+			});
+			btnBalance.setBounds(125, 191, 184, 23);
+		}
+		return btnBalance;
 	}
 }
