@@ -41,7 +41,7 @@ public class EmpleadosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -88,7 +88,7 @@ public class EmpleadosDataBase {
 				String id = String.valueOf(i + 1);
 				tdb.addVendedor(id,emp.getId());
 			}
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -111,7 +111,7 @@ public class EmpleadosDataBase {
 			pst.executeUpdate();
 			
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -126,7 +126,7 @@ public class EmpleadosDataBase {
 			pst.executeUpdate();
 			
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}

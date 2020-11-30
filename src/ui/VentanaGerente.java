@@ -58,7 +58,9 @@ public class VentanaGerente extends JFrame {
 			btnAlmacen = new JButton("Ver almac\u00E9n");
 			btnAlmacen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaAlmacen.run(db);
+					VentanaAlmacen frame = new VentanaAlmacen(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
 			btnAlmacen.setBounds(125, 73, 184, 23);
@@ -70,7 +72,9 @@ public class VentanaGerente extends JFrame {
 			btnNewButton = new JButton("Administrar empleados");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaEmpleados.run(db);
+					VentanaEmpleados frame = new VentanaEmpleados(db);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setVisible(true);
 				}
 			});
 			btnNewButton.setBounds(125, 133, 184, 23);

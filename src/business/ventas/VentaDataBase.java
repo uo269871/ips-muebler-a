@@ -30,7 +30,7 @@ public class VentaDataBase{
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -48,10 +48,10 @@ public class VentaDataBase{
 			pst.executeUpdate();
 
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
+			pst = db.getConnection().prepareStatement(
+					"insert into ips_ventas_productos(venta_id,product_id, recoger, montar,unidades) values (?,?,?,?,?)");
 			for (Producto p : productos) {
-				pst = db.getConnection().prepareStatement(
-						"insert into ips_ventas_productos(venta_id,product_id, recoger, montar,unidades) values (?,?,?,?,?)");
 				pst.setString(1, v.getVenta_Id());
 				pst.setString(2, p.getProduct_id());
 				pst.setInt(3, 0);
@@ -59,10 +59,9 @@ public class VentaDataBase{
 				pst.setInt(5, p.getUds());
 
 				pst.executeUpdate();
-
-				pst.close();
-				db.cierraConexion();
 			}
+			pst.close();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database  " + e.getMessage());
 		}
@@ -80,7 +79,7 @@ public class VentaDataBase{
 				Venta v = new Venta(venta_id, client_id, fecha);
 				ventas.add(v);
 			}
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -100,9 +99,9 @@ public class VentaDataBase{
 			while (rs.next()) {
 				aux.add(rs.getString("product_id"));
 			}
-			db.cierraConexion();
+//			db.cierraConexion();
+			pst = db.getConnection().prepareStatement("select * from ips_productos where product_id = ?");
 			for (String s : aux) {
-				pst = db.getConnection().prepareStatement("select * from ips_productos where product_id = ?");
 				pst.setString(1, s);
 				rs = pst.executeQuery();
 				if (rs.next()) {
@@ -112,10 +111,9 @@ public class VentaDataBase{
 					Producto p = new Producto(name, type, s, price);
 					productos.add(p);
 				}
-				pst.close();
-				db.cierraConexion();
-
 			}
+			pst.close();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -134,7 +132,7 @@ public class VentaDataBase{
 			pst.executeQuery();
 			
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -154,7 +152,7 @@ public class VentaDataBase{
 					b = true;
 				}
 			}
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

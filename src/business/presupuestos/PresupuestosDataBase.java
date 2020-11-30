@@ -29,6 +29,28 @@ public class PresupuestosDataBase {
 		this.db = db;
 	}
 
+	public List<Presupuesto> getPresupuestosPlantilla() {
+		ArrayList<Presupuesto> presupuestos = new ArrayList<Presupuesto>();
+		try {
+			Statement st = db.getConnection().createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_PRESUPUESTOS where client_id is null");
+			while (rs.next()) {
+				Date fecha = rs.getDate("FECHA_CADUCIDAD");
+				String client_id = rs.getString("client_id");
+				String presupuesto_id = rs.getString("PRESUPUESTO_ID");
+				Presupuesto pr = new Presupuesto(fecha, presupuesto_id, client_id);
+				presupuestos.add(pr);
+			}
+			rs.close();
+			st.close();
+//			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return presupuestos;
+		
+	}
+	
 	public List<Presupuesto> getPresupuestos() {
 		ArrayList<Presupuesto> presupuestos = new ArrayList<Presupuesto>();
 		try {
@@ -43,7 +65,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -66,7 +88,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -83,18 +105,17 @@ public class PresupuestosDataBase {
 			pst.executeUpdate();
 
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
+			pst = db.getConnection().prepareStatement(
+					"insert into ips_presupuestos_productos(presupuesto_id,product_id,unidades) values (?,?,?)");
 			for (Producto product : productos) {
-				pst = db.getConnection().prepareStatement(
-						"insert into ips_presupuestos_productos(presupuesto_id,product_id,unidades) values (?,?,?)");
 				pst.setString(1, presupuesto.getPresupuesto_id());
 				pst.setString(2, product.getProduct_id());
 				pst.setInt(3, product.getUds());
 				pst.executeUpdate();
-				
-				pst.close();
-				db.cierraConexion();
 			}
+			pst.close();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -113,7 +134,7 @@ public class PresupuestosDataBase {
 			rs = st.executeQuery("delete from ips_presupuestos where presupuesto_id = " + id);
 			
 			
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -131,7 +152,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -149,7 +170,7 @@ public class PresupuestosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}

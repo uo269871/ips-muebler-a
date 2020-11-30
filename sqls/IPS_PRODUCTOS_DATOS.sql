@@ -1,5 +1,5 @@
-insert into ips_productos(product_id,name,type,price) values ('001','mesa alta','mesa',20.99)
-insert into ips_productos(product_id,name,type,price) values ('002','mesa baja','mesa',18.99)
+insert into ips_productos(product_id,name,type,price) values ('001','mesa alta','mesa',10.00)
+insert into ips_productos(product_id,name,type,price) values ('002','mesa baja','mesa',20.00)
 insert into ips_productos(product_id,name,type,price) values ('003','silla alta','para sentarse',7.50)
 insert into ips_productos(product_id,name,type,price) values ('004','silla baja','para sentarse',8.99)
 insert into ips_productos(product_id,name,type,price) values ('005','lampara de techo','iluminacion',34.89)

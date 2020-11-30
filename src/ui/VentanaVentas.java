@@ -153,6 +153,10 @@ public class VentanaVentas extends JFrame {
 			btnAceptar = new JButton("Aceptar presupuesto");
 			btnAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					int pos = table.getSelectedRow();
+					if(pos<0) {
+						return;
+					}
 					aceptarPresupuesto();
 					ejecutarVentanaTransporte(v);
 					dispose();
@@ -202,9 +206,17 @@ public class VentanaVentas extends JFrame {
 			}
 		}
 		if(productosAAñadir.size()>0) {
-			int amount=0;
+			float amount=0;
 			for(Producto aux:productosAAñadir) {
-				amount+=aux.getUds()*aux.getPrice();
+				if(aux.getUds()<10) {
+					amount+=aux.getUds()*aux.getPrice();
+				}else if(aux.getUds()<20) {
+					amount+=((aux.getUds()*aux.getPrice())*0.95);
+				}else if(aux.getUds()<50) {
+					amount+=((aux.getUds()*aux.getPrice())*0.9);
+				}else {
+					amount+=((aux.getUds()*aux.getPrice())*0.8);
+				}
 			}
 			int id_pedido=pdb.getPedidos().size()+1;
 			Pedido pedido= new Pedido(id_pedido, amount, "ENCARGADO PARA V:"+Claves.toClave(id), productosAAñadir);

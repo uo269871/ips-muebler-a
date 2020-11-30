@@ -42,7 +42,7 @@ public class PedidosDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -59,19 +59,28 @@ public class PedidosDataBase {
 			pst.setFloat(3, pedido.getTotal_price());
 			pst.executeUpdate();
 			pst.close();
-			db.cierraConexion();
-			
+//			db.cierraConexion();
+			pst = db.getConnection().prepareStatement(
+					"insert into ips_pedido_producto(pedido_id,product_id,unidades,price,descuento) values (?,?,?,?,?)");
 			for(Producto pr:pedido.getProductos()) {
-				pst = db.getConnection().prepareStatement(
-					"insert into ips_pedido_producto(pedido_id,product_id,unidades,price) values (?,?,?,?)");
 				pst.setString(1, Claves.toClave(pedido.getPedido_id()));
 				pst.setString(2, pr.getProduct_id());
 				pst.setInt(3, pr.getUds());
 				pst.setFloat(4, pr.getPrice());
+				if(pr.getUds()<10) {
+					pst.setInt(5, 0);
+				}else if(pr.getUds()<20) {
+					pst.setInt(5, 5);
+				}else if(pr.getUds()<50) {
+					pst.setInt(5, 10);
+				}else {
+					pst.setInt(5, 20);
+				}
 				pst.executeUpdate();
-				pst.close();
-				db.cierraConexion();
+				
 			}
+			pst.close();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -91,7 +100,7 @@ public class PedidosDataBase {
 				pr.setTotal_price(rs.getFloat("total_price"));
 				rs.close();
 				st.close();
-				db.cierraConexion();
+//				db.cierraConexion();
 				st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PEDIDO_PRODUCTO WHERE pedido_id = ?");
 				st.setString(1, Claves.toClave(Integer.parseInt(pedido_id)));
 				rs=st.executeQuery();
@@ -104,7 +113,7 @@ public class PedidosDataBase {
 				}
 				rs.close();
 				st.close();
-				db.cierraConexion();
+//				db.cierraConexion();
 				for(Producto aux:productos) {
 					st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PRODUCTOS WHERE product_id = ?");
 					st.setString(1, Claves.toClave(Integer.parseInt(aux.getProduct_id())));
@@ -115,7 +124,7 @@ public class PedidosDataBase {
 					}
 					rs.close();
 					st.close();
-					db.cierraConexion();
+//					db.cierraConexion();
 				}
 				pr.setProductos(productos);
 			}
@@ -132,7 +141,7 @@ public class PedidosDataBase {
 			st.setString(2, Claves.toClave(Integer.parseInt(pedido_id)));
 			st.executeQuery();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}

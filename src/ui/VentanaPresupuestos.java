@@ -78,6 +78,7 @@ public class VentanaPresupuestos extends JFrame {
 
 	
 	private DataBase db;
+	private JButton btnCargarPlantillas;
 	
 	/**
 	 * Launch the application.
@@ -98,9 +99,9 @@ public class VentanaPresupuestos extends JFrame {
 	public VentanaPresupuestos(DataBase db) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.db=db;
+		this.presupuesto= new ArrayList<Producto>();
 		cargarCatalogo();
 		cliente= null;
-		presupuesto=new ArrayList<Producto>();
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().add(getPanelNorte(), BorderLayout.NORTH);
 		getContentPane().add(getPanelCentro(), BorderLayout.CENTER);
@@ -195,7 +196,8 @@ public class VentanaPresupuestos extends JFrame {
 			panelBotonCatalogo = new JPanel();
 			panelBotonCatalogo.setForeground(Color.WHITE);
 			panelBotonCatalogo.setBackground(Color.WHITE);
-			panelBotonCatalogo.setLayout(new GridLayout(0, 1, 0, 0));
+			panelBotonCatalogo.setLayout(new GridLayout(4, 1, 0, 0));
+			panelBotonCatalogo.add(getBtnCargarPlantillas());
 			panelBotonCatalogo.add(getBtnAddToPresupuesto());
 			panelBotonCatalogo.add(getBtnFilterPrice());
 			panelBotonCatalogo.add(getBtnFilterType());
@@ -213,34 +215,44 @@ public class VentanaPresupuestos extends JFrame {
 			btnAddToPresupuesto.setMnemonic('t');
 			btnAddToPresupuesto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					for(int i=0;i<getTableCatalogo().getSelectedRows().length;i++)
+					for(int i=0;i<getTableCatalogo().getSelectedRows().length;i++) {
+						String parse=JOptionPane.showInputDialog(getContentPane(), "¿Cuantas Uds desearía añadir?","Error en el formato",JOptionPane.QUESTION_MESSAGE);
+						int udsToAdd=0;
+						try {
+							udsToAdd = Integer.parseInt(parse);
+						}catch (Exception ex){
+							JOptionPane.showMessageDialog(getContentPane(), "El formato de las unidades a añadir no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
+							break;
+						}
 						if(!presupuesto.contains(catalogo.get(getTableCatalogo().getSelectedRows()[i]))) {
 							Vector<String> v= new Vector<String>();
 							v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getName());
 							v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getType());
-							v.add(String.valueOf(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
-							v.add(String.valueOf(1));
+							v.add(String.format("%.2f", catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
+							v.add(String.valueOf(udsToAdd));
 							modeloTablePresupesto.addRow(v);
 //							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 3);
 //							tablePresupuesto.setValueAt("NO", modeloTablePresupesto.getRowCount() - 1, 4);
-							presupuesto.add(new Producto(catalogo.get(getTableCatalogo().getSelectedRows()[i]),1));
+							presupuesto.add(new Producto(catalogo.get(getTableCatalogo().getSelectedRows()[i]),udsToAdd));
 						}else {
 							for(int j=0;j<modeloTablePresupesto.getRowCount();j++) {
 								if(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getName().equals(modeloTablePresupesto.getValueAt(j, 0))) {
 									Vector<String> v= new Vector<String>();
 									v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getName());
 									v.add(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getType());
-									v.add(String.valueOf(catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
-									int uds=Integer.parseInt(modeloTablePresupesto.getValueAt(j, 3).toString())+1;
+									v.add(String.format("%.2f", catalogo.get(getTableCatalogo().getSelectedRows()[i]).getPrice()));
+									int uds=Integer.parseInt(modeloTablePresupesto.getValueAt(j, 3).toString())+udsToAdd;
 									v.add(uds+"");
 									modeloTablePresupesto.removeRow(j);
 									modeloTablePresupesto.addRow(v);
 									Producto pr=new Producto(catalogo.get(getTableCatalogo().getSelectedRows()[i]),uds);
 									presupuesto.remove(pr);
 									presupuesto.add(pr);
+									break;
 								}
 							}
 						}
+					}
 					actualizaPrecio();
 					changeEnableSave();
 					repaint();
@@ -254,13 +266,34 @@ public class VentanaPresupuestos extends JFrame {
 		return btnAddToPresupuesto;
 	}
 	
+	void setPresupuesto(List<Producto> pre){
+		presupuesto=new ArrayList<Producto>();
+		modeloTablePresupesto.getDataVector().removeAllElements();
+		modeloTablePresupesto.fireTableDataChanged();
+		CatalogoDataBase cdb= new CatalogoDataBase(db);
+		for(int i =0;i<pre.size();i++) {
+			Producto pr=cdb.getProductoById(pre.get(i).getProduct_id());
+			pr.setUds(pre.get(i).getUds());
+			Vector<String> v= new Vector<String>();
+			v.add(pr.getName());
+			v.add(pr.getType());
+			v.add(pr.getPrice()+"");
+			v.add(pr.getUds()+"");
+			modeloTablePresupesto.addRow(v);
+			presupuesto.add(pr);
+		}
+		actualizaPrecio();
+		changeEnableSave();
+		repaint();
+	}
+	
 	private void actualizaPrecio() {
 		float price=0;
 		for(Producto aux:presupuesto) {
 			price+=aux.getPrice()*aux.getUds();
 		}
 		if(price!=0) {
-			getTxtTotal().setText("Total: "+price);
+			getTxtTotal().setText("Total: "+String.format("%.2f", price));
 		}else {
 			getTxtTotal().setText("Total: ");
 		}
@@ -428,7 +461,7 @@ public class VentanaPresupuestos extends JFrame {
 			for(int i =0;i<catalogo.size();i++) {
 				tableCatalogo.setValueAt(catalogo.get(i).getName(), i, 0);
 				tableCatalogo.setValueAt(catalogo.get(i).getType(),i, 1);
-				tableCatalogo.setValueAt(catalogo.get(i).getPrice(),i, 2);
+				tableCatalogo.setValueAt(String.format("%.2f", catalogo.get(i).getPrice()),i, 2);
 			}
 		}
 		return tableCatalogo;
@@ -611,10 +644,24 @@ public class VentanaPresupuestos extends JFrame {
 	private void filtrarPrecios() {
 		CatalogoDataBase cdb = new CatalogoDataBase(db);
 		try {
-			float min = Float.parseFloat(JOptionPane.showInputDialog(null, "Ponga el precio mínimo"));
-			float max = Float.parseFloat(JOptionPane.showInputDialog(null, "Ponga el precio máximo"));
-
+			String parse=JOptionPane.showInputDialog(null, "Ponga el precio mínimo");
+			float min=0;
+			try {
+				min = Float.parseFloat(parse);
+			}catch (Exception ex){
+				JOptionPane.showMessageDialog(getContentPane(), "El formato del precio minimo no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			float max = 0;
+			parse=JOptionPane.showInputDialog(null, "Ponga el precio máximo");
+			try {
+				max = Float.parseFloat(parse);
+			}catch (Exception ex){
+				JOptionPane.showMessageDialog(getContentPane(), "El formato del precio maximo no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			if(max < min) {
+				JOptionPane.showMessageDialog(getContentPane(), "El precio maximo es menor que el precio minimo, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 
@@ -736,5 +783,27 @@ public class VentanaPresupuestos extends JFrame {
 
 	private void cargarTipos() {
 		tipos = new CatalogoDataBase(db).getTipos();
+	}
+	private JButton getBtnCargarPlantillas() {
+		if (btnCargarPlantillas == null) {
+			btnCargarPlantillas = new JButton("Cargar plantillas");
+			btnCargarPlantillas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ejecutarVentanaPlantillas();
+				}
+			});
+			btnCargarPlantillas.setMnemonic('t');
+			btnCargarPlantillas.setMargin(new Insets(0, 0, 0, 0));
+			btnCargarPlantillas.setForeground(Color.BLACK);
+			btnCargarPlantillas.setFont(new Font("Dialog", Font.BOLD, 14));
+			btnCargarPlantillas.setBackground(Color.LIGHT_GRAY);
+		}
+		return btnCargarPlantillas;
+	}
+	
+	private void ejecutarVentanaPlantillas() {
+		VentanaPlantillasPresupuestos frame = new VentanaPlantillasPresupuestos(this,db);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }

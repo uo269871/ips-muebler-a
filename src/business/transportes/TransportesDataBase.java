@@ -39,7 +39,7 @@ public class TransportesDataBase {
 			}
 			rs.close();
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -61,7 +61,7 @@ public class TransportesDataBase {
 			pst.executeUpdate();
 
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the databasesds " + e.getMessage());
 		}
@@ -79,7 +79,7 @@ public class TransportesDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -104,7 +104,7 @@ public class TransportesDataBase {
 			}
 			rs.close();
 			st.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -120,7 +120,7 @@ public class TransportesDataBase {
 			pst.executeQuery();
 			
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
@@ -135,7 +135,7 @@ public class TransportesDataBase {
 			pst.executeQuery();
 			
 			pst.close();
-			db.cierraConexion();
+//			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
