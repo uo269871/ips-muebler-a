@@ -36,7 +36,8 @@ public class ClientesDataBase {
 		    	String client_id=rs.getString("client_id");
 		    	String dni=rs.getString("dni");
 		    	String address=rs.getString("address");
-		    	Cliente pr= new Cliente(name,dni,client_id,address);
+		    	String email=rs.getString("email");
+		    	Cliente pr= new Cliente(name,dni,client_id,address,email);
 		    	clientes.add(pr);
 		    }
 		    rs.close();
@@ -67,11 +68,12 @@ public class ClientesDataBase {
 	
 	public boolean addCliente(Cliente cliente) {
 		try {
-			PreparedStatement pst = db.getConnection().prepareStatement("insert into ips_clientes(client_id,name,dni,address) values (?,?,?,?)");
+			PreparedStatement pst = db.getConnection().prepareStatement("insert into ips_clientes(client_id,name,dni,address,email) values (?,?,?,?,?)");
 			pst.setString(1, cliente.getClient_id());
 			pst.setString(2, cliente.getName());
 			pst.setString(3, cliente.getDni());
 			pst.setString(4, cliente.getAddress());
+			pst.setString(5, cliente.getEmail());
 			pst.executeUpdate();
 		    
 		    pst.close();

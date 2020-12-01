@@ -12,6 +12,15 @@ public class Cliente {
 	private String address;
 	private String email;
 	
+	public Cliente(String name, String dni, String client_id, String address,String email) {
+		super();
+		this.name = name;
+		this.dni = dni;
+		this.client_id = client_id;
+		this.address = address;
+		this.email=email;
+	}
+	
 	public Cliente(String name, String dni, String client_id, String address) {
 		super();
 		this.name = name;
@@ -72,10 +81,16 @@ public class Cliente {
 		this.address = address;
 	}
 
+	/**
+	 * @return the email
+	 */
 	public String getEmail() {
 		return email;
 	}
 
+	/**
+	 * @param email the email to set
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
