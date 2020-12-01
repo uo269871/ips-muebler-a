@@ -1,6 +1,3 @@
-/**
- * 
- */
 package business;
 
 import business.bbdd.DataBase;
@@ -18,6 +15,7 @@ public class Main {
 	public static void main(String[] args) {
 		DataBase db=new DataBase(1);
 		VentanaInicioSesion.run(db);
+
 	}
 
 }

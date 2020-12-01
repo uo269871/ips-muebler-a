@@ -13,7 +13,7 @@ import business.bbdd.DataBase;
 import business.logic.Producto;
 import business.logic.Venta;
 
-public class VentaDataBase{
+public class VentaDataBase {
 
 	private DataBase db;
 
@@ -26,7 +26,7 @@ public class VentaDataBase{
 		try {
 			Statement st = db.getConnection().createStatement();
 			ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM  IPS_VENTAS");
-			if(rs.next()) {
+			if (rs.next()) {
 				aux = rs.getInt(1);
 			}
 			rs.close();
@@ -39,7 +39,6 @@ public class VentaDataBase{
 	}
 
 	public void addVenta(Venta v, List<Producto> productos) {
-
 		try {
 			PreparedStatement pst = db.getConnection()
 					.prepareStatement("insert into ips_ventas(venta_id,client_id,fecha_entrega) values (?,?,?)");
@@ -67,7 +66,7 @@ public class VentaDataBase{
 			System.out.println("Error while operating the database  " + e.getMessage());
 		}
 	}
-	
+
 	public List<Venta> getVentas() {
 		List<Venta> ventas = new ArrayList<Venta>();
 		try {
@@ -145,24 +144,51 @@ public class VentaDataBase{
 		return productos;
 	}
 	
-	public void updateTransporteMontaje(Producto producto, Venta venta, int transporte, int montaje) {
+	public List<Producto> getProductosVenta(String id) {
+		List<Producto> productos = new ArrayList<Producto>();
 		try {
 			PreparedStatement pst = db.getConnection()
-					.prepareStatement("update ips_ventas_productos set recoger = ?, montar = ? where product_id = ? and venta_id = ?");
+					.prepareStatement("select * from ips_ventas_productos where venta_id = ?");
+			pst.setString(1, id);
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				pst = db.getConnection().prepareStatement("select * from ips_productos where product_id = ?");
+				String pId = rs.getString("product_id");
+				pst.setString(1, pId);
+				ResultSet s = pst.executeQuery();
+				String name = "";
+				if (s.next())
+					name = s.getString("name");
+				int uds = rs.getInt("unidades");
+				int m = rs.getInt("montar");
+				int r = rs.getInt("recoger");
+				productos.add(new Producto(name,pId, uds, r, m));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return productos;
+	}
+
+	public void updateTransporteMontaje(Producto producto, Venta venta, int transporte, int montaje) {
+		try {
+			PreparedStatement pst = db.getConnection().prepareStatement(
+					"update ips_ventas_productos set recoger = ?, montar = ? where product_id = ? and venta_id = ?");
 			pst.setInt(1, transporte);
 			pst.setInt(2, montaje);
 			pst.setString(3, producto.getProduct_id());
 			pst.setString(4, venta.getVenta_Id());
-			
+
 			pst.executeQuery();
-			
+
 			pst.close();
 //			db.cierraConexion();
 		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
 	}
-	
+
 	public boolean isMontado(String ventaId, String productId) {
 		boolean b = false;
 		try {
@@ -173,7 +199,7 @@ public class VentaDataBase{
 			ResultSet rs = pst.executeQuery();
 
 			if (rs.next()) {
-				if(rs.getInt(1) == 1) {
+				if (rs.getInt(1) == 1) {
 					b = true;
 				}
 			}
@@ -182,7 +208,7 @@ public class VentaDataBase{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return b;
 	}
 	

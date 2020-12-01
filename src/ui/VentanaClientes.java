@@ -181,6 +181,7 @@ public class VentanaClientes extends JFrame {
 			v.add("Nombre");
 			v.add("DNI");
 			v.add("Direccion");
+			v.add("Email");
 			modeloTableCliente = new DefaultTableModel(v,rows) {
 
 			    /**
@@ -201,6 +202,7 @@ public class VentanaClientes extends JFrame {
 				tableCliente.setValueAt(clientes.get(i).getName(), i, 0);
 				tableCliente.setValueAt(clientes.get(i).getDni(),i, 1);
 				tableCliente.setValueAt(clientes.get(i).getAddress(),i, 2);
+				tableCliente.setValueAt(clientes.get(i).getEmail(),i, 3);
 			}
 		}
 		return tableCliente;

@@ -3,10 +3,12 @@
  */
 package business.pedidos;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,8 @@ public class PedidosDataBase {
 				int pedido_id = Integer.parseInt(rs.getString("pedido_id"));
 				float price = rs.getFloat("total_price");
 				String state = rs.getString("state");
-				Pedido pr = new Pedido(pedido_id ,price,state,null);
+				Date date = rs.getDate("DATE_PEDIDO");
+				Pedido pr = new Pedido(pedido_id ,price,state,null,date);
 				pedidos.add(pr);
 			}
 			rs.close();
@@ -53,10 +56,11 @@ public class PedidosDataBase {
 	public boolean addPedido(Pedido pedido) {
 		try {
 			PreparedStatement pst = db.getConnection().prepareStatement(
-					"insert into ips_pedido(pedido_id,state,total_price) values (?,?,?)");
+					"insert into ips_pedido(pedido_id,state,total_price,DATE_PEDIDO) values (?,?,?,?)");
 			pst.setString(1, Claves.toClave(pedido.getPedido_id()));
 			pst.setString(2, pedido.getEstado());
 			pst.setFloat(3, pedido.getTotal_price());
+			pst.setDate(4, Date.valueOf(LocalDate.now()));
 			pst.executeUpdate();
 			pst.close();
 //			db.cierraConexion();
@@ -92,21 +96,22 @@ public class PedidosDataBase {
 		List<Producto> productos=new ArrayList<Producto>();
 		try {
 			PreparedStatement st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PEDIDO WHERE pedido_id = ?");
-			st.setString(1, Claves.toClave(Integer.parseInt(pedido_id)));
+			st.setString(1,pedido_id);
 			ResultSet rs=st.executeQuery();
 			if(rs.next()) {
 				pr.setEstado(rs.getString("state"));
 				pr.setPedido_id(Integer.parseInt(rs.getString("pedido_id")));
 				pr.setTotal_price(rs.getFloat("total_price"));
+				pr.setDate(rs.getDate("DATE_PEDIDO"));
 				rs.close();
 				st.close();
 //				db.cierraConexion();
 				st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PEDIDO_PRODUCTO WHERE pedido_id = ?");
-				st.setString(1, Claves.toClave(Integer.parseInt(pedido_id)));
+				st.setString(1, pedido_id);
 				rs=st.executeQuery();
 				while (rs.next()) {
 					Producto pro=new Producto();
-					pro.setProduct_id(String.valueOf(rs.getInt("product_id")));
+					pro.setProduct_id(rs.getString("product_id"));
 					pro.setUds(rs.getInt("unidades"));
 					pro.setPrice(rs.getFloat("price"));
 					productos.add(pro);
@@ -116,7 +121,7 @@ public class PedidosDataBase {
 //				db.cierraConexion();
 				for(Producto aux:productos) {
 					st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PRODUCTOS WHERE product_id = ?");
-					st.setString(1, Claves.toClave(Integer.parseInt(aux.getProduct_id())));
+					st.setString(1, aux.getProduct_id());
 					rs=st.executeQuery();
 					while (rs.next()) {
 						aux.setType(rs.getString("type"));
@@ -138,7 +143,7 @@ public class PedidosDataBase {
 		try {
 			PreparedStatement st = db.getConnection().prepareStatement("update IPS_PEDIDO set  state = ? where pedido_id = ?");
 			st.setString(1, state);
-			st.setString(2, Claves.toClave(Integer.parseInt(pedido_id)));
+			st.setString(2, pedido_id);
 			st.executeQuery();
 			st.close();
 //			db.cierraConexion();

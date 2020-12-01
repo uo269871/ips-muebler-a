@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -30,7 +31,6 @@ import business.logic.Cliente;
 import business.logic.Presupuesto;
 import business.logic.Producto;
 import business.presupuestos.PresupuestosDataBase;
-import util.Claves;
 /**
  * @author UO270656
  *  DNI 71732222Y
@@ -219,7 +219,11 @@ public class VentanaPresupuestos extends JFrame {
 						String parse=JOptionPane.showInputDialog(getContentPane(), "¿Cuantas Uds desearía añadir?","Error en el formato",JOptionPane.QUESTION_MESSAGE);
 						int udsToAdd=0;
 						try {
-							udsToAdd = Integer.parseInt(parse);
+							if(parse!=null) {
+								udsToAdd = Integer.parseInt(parse);
+							}else {
+								return;
+							}
 						}catch (Exception ex){
 							JOptionPane.showMessageDialog(getContentPane(), "El formato de las unidades a añadir no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 							break;
@@ -352,16 +356,16 @@ public class VentanaPresupuestos extends JFrame {
 	
 	private void guardarPresupuesto() {
 		PresupuestosDataBase pdb = new PresupuestosDataBase(db);
-		List<Presupuesto> presupuestos = pdb.getPresupuestos();
-		int id=1;
-		if(presupuestos.size()>0) {
-			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
-			id++;
-		}
+//		List<Presupuesto> presupuestos = pdb.getPresupuestos();
+//		int id=1;
+//		if(presupuestos.size()>0) {
+//			id = Integer.parseInt(presupuestos.get(presupuestos.size()-1).getPresupuesto_id());
+//			id++;
+//		}
 		if(cliente!=null) {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), cliente.getClient_id()),presupuesto);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), UUID.randomUUID().toString(), cliente.getClient_id()),presupuesto);
 		}else {
-			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), Claves.toClave(id), null),presupuesto);
+			pdb.addPresupuesto(new Presupuesto(new Date(System.currentTimeMillis() + 1296000000), UUID.randomUUID().toString(), null),presupuesto);
 		}
 		//Eliminar del almacen las uds
 	}
@@ -627,7 +631,7 @@ public class VentanaPresupuestos extends JFrame {
 
 			filtroTipos = true;
 			getBtnFilterType().setText("Quitar filtro de tipo");
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 
 		}
 
@@ -647,7 +651,11 @@ public class VentanaPresupuestos extends JFrame {
 			String parse=JOptionPane.showInputDialog(null, "Ponga el precio mínimo");
 			float min=0;
 			try {
-				min = Float.parseFloat(parse);
+				if(parse!=null) {
+					min = Float.parseFloat(parse);
+				}else {
+					return;
+				}
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(getContentPane(), "El formato del precio minimo no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 				return;
@@ -655,7 +663,11 @@ public class VentanaPresupuestos extends JFrame {
 			float max = 0;
 			parse=JOptionPane.showInputDialog(null, "Ponga el precio máximo");
 			try {
-				max = Float.parseFloat(parse);
+				if(parse!=null) {
+					max = Float.parseFloat(parse);
+				}else {
+					return;
+				}
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(getContentPane(), "El formato del precio maximo no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 				return;
@@ -691,7 +703,7 @@ public class VentanaPresupuestos extends JFrame {
 
 			getBtnFilterPrice().setText("Quitar filtro de precio");
 			filtroPrecios = true;
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 
 		}
 

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -538,6 +539,10 @@ public class VentanaMontar extends JFrame {
 								}
 								dispose();
 							}
+							for (Producto p : montajes) {
+								vdb.updateTransporteMontaje(p, venta, 1, 1);
+							}
+							dispose();
 						} else
 							JOptionPane.showMessageDialog(frame, "No has seleccionado ningún transportista");
 					} else
@@ -567,6 +572,7 @@ public class VentanaMontar extends JFrame {
 		}
 		return spAño;
 	}
+	
 	private JLabel getLblFecha() {
 		if (lblFecha == null) {
 			lblFecha = new JLabel("Fecha:");
