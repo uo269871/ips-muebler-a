@@ -73,6 +73,8 @@ public class ClientesDataBase {
 			pst.setString(2, cliente.getName());
 			pst.setString(3, cliente.getDni());
 			pst.setString(4, cliente.getAddress());
+
+			pst.setString(5, cliente.getEmail());
 			pst.executeUpdate();
 
 			pst.close();

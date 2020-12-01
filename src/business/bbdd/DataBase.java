@@ -24,8 +24,8 @@ public class DataBase {
 
 	final static String DB_URL = "jdbc:oracle:thin:@156.35.94.99:1521:DESA";
 
-	final static String DB_USER = "UO270656";
-	final static String DB_PASSWORD = "nerobe44";
+	final static String DB_USER = "UO271033";
+	final static String DB_PASSWORD = "passuwu";
 
 
 

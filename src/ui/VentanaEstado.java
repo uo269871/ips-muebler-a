@@ -25,8 +25,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
+import business.logic.Producto;
 import business.logic.Transporte;
 import business.transportes.TransportesDataBase;
+import business.ventas.VentaDataBase;
 import util.Correo;
 
 public class VentanaEstado extends JFrame {
@@ -338,7 +340,7 @@ public class VentanaEstado extends JFrame {
 						correo.sendEmail("uo271033@uniovi.es",
 								Date.valueOf(LocalDate.of((Integer) getSpAño().getValue(),
 										(Integer) getCbMes().getSelectedItem(),
-										(Integer) getCbDia().getSelectedItem())));
+										(Integer) getCbDia().getSelectedItem())), getProductos());
 					} else if (transporte.getEstado().equals("EN TRANSITO")) {
 						transporte.setEstado("ENTREGADO");
 						txEstado.setText(transporte.getEstado());
@@ -405,7 +407,6 @@ public class VentanaEstado extends JFrame {
 						cbDia.setSelectedItem(cal.get(Calendar.DAY_OF_MONTH));
 						txEstado.setText(transporte.getEstado());
 					}
-					checkEstado();
 				}
 			});
 			cbTransporte.setModel(new DefaultComboBoxModel<Transporte>(getTransportes()));
@@ -422,6 +423,12 @@ public class VentanaEstado extends JFrame {
 		List<Transporte> trs = tdb.getTransportes();
 		Transporte[] transportes = trs.toArray(new Transporte[trs.size()]);
 		return transportes;
+	}
+	
+	private List<Producto> getProductos() {
+		VentaDataBase vdb = new VentaDataBase(db);
+		List<Producto> productos = vdb.getProductosVenta(transporte.getId_venta());
+		return productos;
 	}
 
 	private void checkEstado() {

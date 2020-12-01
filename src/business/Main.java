@@ -13,7 +13,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DataBase db=new DataBase(1);
+		DataBase db=new DataBase(2);
 		VentanaInicioSesion.run(db);
 
 	}

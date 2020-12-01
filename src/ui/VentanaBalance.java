@@ -53,7 +53,7 @@ public class VentanaBalance extends JFrame {
 	private JLabel lblAño;
 	private JSpinner spAño;
 	private ChartPanel panelBalance;
-	
+
 	private DataBase db;
 
 	/**
@@ -160,7 +160,11 @@ public class VentanaBalance extends JFrame {
 			cbMes = new JComboBox<Integer>();
 			cbMes.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					panelBalance = new ChartPanel(getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
+					if (panelBalance != null) {
+						panelBalance.removeAll();
+						panelBalance = new ChartPanel(
+								getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
+					}
 				}
 			});
 			cbMes.setModel(new DefaultComboBoxModel<Integer>(getMeses()));
@@ -192,17 +196,20 @@ public class VentanaBalance extends JFrame {
 			spAño.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					panelBalance = new ChartPanel(getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
+					panelBalance = new ChartPanel(
+							getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
 				}
 			});
-			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(LocalDate.now().getYear()), 0, null, Integer.valueOf(1)));
+			spAño.setModel(
+					new SpinnerNumberModel(Integer.valueOf(LocalDate.now().getYear()), 0, null, Integer.valueOf(1)));
 		}
 		return spAño;
 	}
 
 	private ChartPanel getPanelBalance() {
 		if (panelBalance == null) {
-			panelBalance = new ChartPanel(getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
+			panelBalance = new ChartPanel(
+					getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
 
 		}
 		return panelBalance;
@@ -217,11 +224,11 @@ public class VentanaBalance extends JFrame {
 		dataset.addValue(array[0], "€", "Beneficios");
 		dataset.addValue(array[1], "€", "Pérdidas");
 		dataset.addValue(array[2], "€", "Total");
-		JFreeChart chart = ChartFactory.createBarChart("Balance", null, null, dataset,
-				PlotOrientation.VERTICAL, true, true, false);
+		JFreeChart chart = ChartFactory.createBarChart("Balance", null, null, dataset, PlotOrientation.VERTICAL, true,
+				true, false);
 		return chart;
 	}
-	
+
 	private int getBeneficios(int year, int month) {
 		int ben = 0;
 		VentaDataBase vdb = new VentaDataBase(db);
@@ -235,10 +242,10 @@ public class VentanaBalance extends JFrame {
 				ben += uds * precio;
 			}
 		}
-		
+
 		return ben;
 	}
-	
+
 	private int getPerdidas() {
 		int per = 0;
 		PedidosDataBase pdb = new PedidosDataBase(db);
@@ -246,7 +253,7 @@ public class VentanaBalance extends JFrame {
 		for (Pedido p : pedidos) {
 			per += p.getTotal_price();
 		}
-		
+
 		return per;
 	}
 }

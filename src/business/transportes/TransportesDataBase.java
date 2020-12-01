@@ -120,7 +120,7 @@ public class TransportesDataBase {
 			while (rs.next()) {
 				String id = rs.getString("id_transporte");
 				String id_venta = rs.getString("id_venta");
-				String dni_transportista = rs.getString("dni_transportista");
+				String dni_transportista = rs.getString("id_transportista");
 				Date dia = rs.getDate("dia_entrega");
 				int hora = rs.getInt("hora_entrega");
 				int minuto = rs.getInt("minuto_entrega");

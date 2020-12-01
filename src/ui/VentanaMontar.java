@@ -518,7 +518,6 @@ public class VentanaMontar extends JFrame {
 						if (tr != null) {
 							TransportesDataBase tdb = new TransportesDataBase(db);
 							VentaDataBase vdb = new VentaDataBase(db);
-							int id = tdb.getNumeroTransportes() + 1;
 							Date fecha = Date.valueOf(LocalDate.of((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem(),
 									(Integer) getCbDia().getSelectedItem()));
 							Calendar cal = Calendar.getInstance();
@@ -527,8 +526,8 @@ public class VentanaMontar extends JFrame {
 							if (day == Calendar.SUNDAY) {
 								JOptionPane.showMessageDialog(frame, "No se puede transportar un domingo");
 							} else {
-								Transporte transporte = new Transporte(Claves.toClave(id), venta.getVenta_Id(),
-										tr.getDni(), fecha, (int) cbHora.getSelectedItem(),
+								Transporte transporte = new Transporte(UUID.randomUUID().toString(), venta.getVenta_Id(),
+										tr.getId(), fecha, (int) cbHora.getSelectedItem(),
 										(int) cbMinuto.getSelectedItem(), "PENDIENTE");
 								tdb.addTransportes(transporte);
 								for (Producto p : transportes) {
