@@ -3,6 +3,7 @@
  */
 package business.logic;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ public class Pedido {
 	private int pedido_id;
 	private float total_price;
 	private String estado;
+	private Date date;
 	
 	private List<Producto> productos;
 	
@@ -23,6 +25,15 @@ public class Pedido {
 		this.estado=estado;
 		this.pedido_id=pedido_id;
 		this.productos=productos;
+	}
+	
+	public Pedido(int pedido_id, float total_price, String estado,List<Producto> productos,Date date) {
+		super();
+		this.total_price = total_price;
+		this.estado=estado;
+		this.pedido_id=pedido_id;
+		this.productos=productos;
+		this.setDate(date);
 	}
 
 	public Pedido() {
@@ -55,6 +66,14 @@ public class Pedido {
 	 */
 	public List<Producto> getProductos() {
 		return productos;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**
