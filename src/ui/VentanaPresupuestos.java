@@ -219,7 +219,11 @@ public class VentanaPresupuestos extends JFrame {
 						String parse=JOptionPane.showInputDialog(getContentPane(), "¿Cuantas Uds desearía añadir?","Error en el formato",JOptionPane.QUESTION_MESSAGE);
 						int udsToAdd=0;
 						try {
-							udsToAdd = Integer.parseInt(parse);
+							if(parse!=null) {
+								udsToAdd = Integer.parseInt(parse);
+							}else {
+								return;
+							}
 						}catch (Exception ex){
 							JOptionPane.showMessageDialog(getContentPane(), "El formato de las unidades a añadir no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 							break;
@@ -647,7 +651,11 @@ public class VentanaPresupuestos extends JFrame {
 			String parse=JOptionPane.showInputDialog(null, "Ponga el precio mínimo");
 			float min=0;
 			try {
-				min = Float.parseFloat(parse);
+				if(parse!=null) {
+					min = Float.parseFloat(parse);
+				}else {
+					return;
+				}
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(getContentPane(), "El formato del precio minimo no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 				return;
@@ -655,7 +663,11 @@ public class VentanaPresupuestos extends JFrame {
 			float max = 0;
 			parse=JOptionPane.showInputDialog(null, "Ponga el precio máximo");
 			try {
-				max = Float.parseFloat(parse);
+				if(parse!=null) {
+					max = Float.parseFloat(parse);
+				}else {
+					return;
+				}
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(getContentPane(), "El formato del precio maximo no es el correcto, por favor intentelo otra vez","Error en el formato",JOptionPane.WARNING_MESSAGE);
 				return;

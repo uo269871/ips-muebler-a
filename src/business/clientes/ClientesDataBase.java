@@ -31,14 +31,15 @@ public class ClientesDataBase {
 		try {
 			Statement st = db.getConnection().createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_CLIENTES");
-			while (rs.next()) {
-				String name = rs.getString("name");
-				String client_id = rs.getString("client_id");
-				String dni = rs.getString("dni");
-				String address = rs.getString("address");
-				Cliente pr = new Cliente(name, dni, client_id, address);
-				clientes.add(pr);
-			}
+			while(rs.next()) {
+		    	String name=rs.getString("name");
+		    	String client_id=rs.getString("client_id");
+		    	String dni=rs.getString("dni");
+		    	String address=rs.getString("address");
+		    	String email=rs.getString("email");
+		    	Cliente pr= new Cliente(name,dni,client_id,address,email);
+		    	clientes.add(pr);
+		    }
 			rs.close();
 			st.close();
 //		    db.cierraConexion();
@@ -67,8 +68,7 @@ public class ClientesDataBase {
 
 	public boolean addCliente(Cliente cliente) {
 		try {
-			PreparedStatement pst = db.getConnection()
-					.prepareStatement("insert into ips_clientes(client_id,name,dni,address) values (?,?,?,?)");
+			PreparedStatement pst = db.getConnection().prepareStatement("insert into ips_clientes(client_id,name,dni,address,email) values (?,?,?,?,?)");
 			pst.setString(1, cliente.getClient_id());
 			pst.setString(2, cliente.getName());
 			pst.setString(3, cliente.getDni());

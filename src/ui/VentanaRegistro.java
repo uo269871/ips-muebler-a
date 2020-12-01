@@ -46,6 +46,8 @@ public class VentanaRegistro extends JDialog {
 	
 	protected VentanaClientes vc;
 	private DataBase db;
+	private JLabel lblEmail;
+	private JTextField txtEmail;
 	
 	/**
 	 * Launch the application.
@@ -98,6 +100,8 @@ public class VentanaRegistro extends JDialog {
 			pnDatos.add(getTxtNombre());
 			pnDatos.add(getTxtDNI());
 			pnDatos.add(getTxtDireccion());
+			pnDatos.add(getLblEmail());
+			pnDatos.add(getTxtEmail());
 		}
 		return pnDatos;
 	}
@@ -151,7 +155,7 @@ public class VentanaRegistro extends JDialog {
 	private void nuevoCliente() {
 		ClientesDataBase cdb = new ClientesDataBase(db);
 		String id = UUID.randomUUID().toString();
-		cdb.addCliente(new Cliente(getTxtNombre().getText(),getTxtDNI().getText(),id,getTxtDireccion().getText()));
+		cdb.addCliente(new Cliente(getTxtNombre().getText(),getTxtDNI().getText(),id,getTxtDireccion().getText(),getTxtEmail().getText()));
 	}
 	
 	/** Método que devuelve o crea y devuelve la etiqueta que indica el Nombre y los apellidos del cliente si no existe
@@ -176,7 +180,7 @@ public class VentanaRegistro extends JDialog {
 			lblDNI = new JLabel("DNI:");
 			lblDNI.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			lblDNI.setDisplayedMnemonic('a');
-			lblDNI.setBounds(35, 85, 140, 20);
+			lblDNI.setBounds(35, 70, 140, 20);
 		}
 		return lblDNI;
 	}
@@ -190,7 +194,7 @@ public class VentanaRegistro extends JDialog {
 			lblDireccion.setLabelFor(getTxtDireccion());
 			lblDireccion.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			lblDireccion.setDisplayedMnemonic('p');
-			lblDireccion.setBounds(35, 140, 140, 20);
+			lblDireccion.setBounds(35, 110, 140, 20);
 		}
 		return lblDireccion;
 	}
@@ -220,6 +224,9 @@ public class VentanaRegistro extends JDialog {
 		}else if(getTxtDireccion().getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Direccion vacío");
 			return false;
+		}else if(getTxtEmail().getText().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Email vacío");
+			return false;
 		}
 		return true;
 	}
@@ -228,7 +235,7 @@ public class VentanaRegistro extends JDialog {
 		if (txtDNI == null) {
 			txtDNI = new JTextField();
 			txtDNI.setColumns(10);
-			txtDNI.setBounds(185, 87, 330, 20);
+			txtDNI.setBounds(185, 70, 330, 20);
 		}
 		return txtDNI;
 	}
@@ -236,8 +243,25 @@ public class VentanaRegistro extends JDialog {
 		if (txtDireccion == null) {
 			txtDireccion = new JTextField();
 			txtDireccion.setColumns(10);
-			txtDireccion.setBounds(185, 142, 330, 20);
+			txtDireccion.setBounds(185, 110, 330, 20);
 		}
 		return txtDireccion;
+	}
+	private JLabel getLblEmail() {
+		if (lblEmail == null) {
+			lblEmail = new JLabel("Email");
+			lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			lblEmail.setDisplayedMnemonic('p');
+			lblEmail.setBounds(35, 150, 140, 20);
+		}
+		return lblEmail;
+	}
+	private JTextField getTxtEmail() {
+		if (txtEmail == null) {
+			txtEmail = new JTextField();
+			txtEmail.setColumns(10);
+			txtEmail.setBounds(185, 150, 330, 20);
+		}
+		return txtEmail;
 	}
 }
