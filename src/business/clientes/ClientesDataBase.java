@@ -27,11 +27,11 @@ public class ClientesDataBase {
 	}
 
 	public List<Cliente> getClientes() {
-		ArrayList<Cliente> clientes=new ArrayList<Cliente>();
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		try {
 			Statement st = db.getConnection().createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_CLIENTES");
-		    while(rs.next()) {
+			while(rs.next()) {
 		    	String name=rs.getString("name");
 		    	String client_id=rs.getString("client_id");
 		    	String dni=rs.getString("dni");
@@ -40,32 +40,32 @@ public class ClientesDataBase {
 		    	Cliente pr= new Cliente(name,dni,client_id,address,email);
 		    	clientes.add(pr);
 		    }
-		    rs.close();
-		    st.close();
+			rs.close();
+			st.close();
 //		    db.cierraConexion();
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
-	    }
+		}
 		return clientes;
-    }
-	
+	}
+
 	public String getCliente(String id) {
-		String name  = "";
+		String name = "";
 		try {
 			Statement st = db.getConnection().createStatement();
-			ResultSet rs = st.executeQuery("SELECT NAME FROM  IPS_CLIENTES WHERE CLIENT_ID = " + id);
-		    while(rs.next()) {
-		    	 name=rs.getString("name");
-		    }
-		    rs.close();
-		    st.close();
+			ResultSet rs = st.executeQuery("SELECT NAME FROM  IPS_CLIENTES WHERE CLIENT_ID = '" + id + "'");
+			while (rs.next()) {
+				name = rs.getString("name");
+			}
+			rs.close();
+			st.close();
 //		    db.cierraConexion();
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
-	    }
+		}
 		return name;
 	}
-	
+
 	public boolean addCliente(Cliente cliente) {
 		try {
 			PreparedStatement pst = db.getConnection().prepareStatement("insert into ips_clientes(client_id,name,dni,address,email) values (?,?,?,?,?)");
@@ -73,14 +73,13 @@ public class ClientesDataBase {
 			pst.setString(2, cliente.getName());
 			pst.setString(3, cliente.getDni());
 			pst.setString(4, cliente.getAddress());
-			pst.setString(5, cliente.getEmail());
 			pst.executeUpdate();
-		    
-		    pst.close();
+
+			pst.close();
 //		    db.cierraConexion();
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			System.out.println("Error while operating the database " + e.getMessage());
-	    }
+		}
 		return true;
 	}
 }

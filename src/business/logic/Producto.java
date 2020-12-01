@@ -11,6 +11,8 @@ public class Producto {
 	
 	private String name;
 	private String type;
+	private int recoger;
+	private int montar;
 	private String product_id;
 	private float price;
 	private int uds;
@@ -26,6 +28,12 @@ public class Producto {
 	public Producto(String name, String type, String product_id, float price,int uds) {
 		this(name,type,product_id,price);
 		this.uds=uds;
+	}
+	
+	public Producto(String name, String product_id,int uds, int r, int m) {
+		this(name,"",product_id,0,uds);
+		this.recoger = r;
+		this.montar = m;
 	}
 	
 	public Producto(Producto pr,int uds) {
@@ -139,5 +147,13 @@ public class Producto {
 			return true;
 		else
 			return false;
+	}
+
+	public int getRecoger() {
+		return recoger;
+	}
+
+	public int getMontar() {
+		return montar;
 	}	
 }

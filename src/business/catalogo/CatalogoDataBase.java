@@ -12,7 +12,6 @@ import java.util.List;
 
 import business.bbdd.DataBase;
 import business.logic.Producto;
-import util.Claves;
 
 /**
  * @author uo270656
@@ -53,7 +52,7 @@ public class CatalogoDataBase {
 		Producto pr=null;
 		try {
 			PreparedStatement st = db.getConnection().prepareStatement("SELECT * FROM  IPS_PRODUCTOS WHERE product_id=?");
-			st.setString(1, Claves.toClave(Integer.parseInt(id)));
+			st.setString(1, id);
 			ResultSet rs=st.executeQuery();
 		    if(rs.next()) {
 		    	String name=rs.getString("name");
@@ -151,7 +150,7 @@ public class CatalogoDataBase {
 		double precio=0.0;
 		try {
 			PreparedStatement st = db.getConnection().prepareStatement("SELECT PRICE FROM  IPS_PRODUCTOS WHERE product_id=?");
-			st.setString(1, Claves.toClave(Integer.parseInt(id)));
+			st.setString(1, id);
 			ResultSet rs=st.executeQuery();
 		    if(rs.next()) {
 		    	precio = rs.getFloat("price");

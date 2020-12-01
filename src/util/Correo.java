@@ -2,7 +2,6 @@ package util;
 
 import java.sql.Date;
 import java.util.Properties;
-import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;

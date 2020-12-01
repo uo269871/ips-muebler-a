@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -515,24 +516,19 @@ public class VentanaMontar extends JFrame {
 						if (tr != null) {
 							TransportesDataBase tdb = new TransportesDataBase(db);
 							VentaDataBase vdb = new VentaDataBase(db);
-							int id = tdb.getNumeroTransportes() + 1;
-							Date fecha = new Date((int) getSpAño().getValue(), (int) cbMes.getSelectedItem(),
-									(int) cbDia.getSelectedItem());
-							if (fecha.getDay() == 0) {
-								JOptionPane.showMessageDialog(frame, "No se puede transportar un domingo");
-							} else {
-								Transporte transporte = new Transporte(String.valueOf(id), venta.getVenta_Id(),
-										tr.getDni(), fecha, (int) cbHora.getSelectedItem(),
-										(int) cbMinuto.getSelectedItem(), "PENDIENTE");
-								tdb.addTransportes(transporte);
-								for (Producto p : transportes) {
-									vdb.updateTransporteMontaje(p, venta, 1, 0);
-								}
-								for (Producto p : montajes) {
-									vdb.updateTransporteMontaje(p, venta, 1, 1);
-								}
-								dispose();
+							String id = UUID.randomUUID().toString();
+							Transporte transporte = new Transporte(id, venta.getVenta_Id(), tr.getId(),
+									new Date((int) getSpAño().getValue(), (int) cbMes.getSelectedItem(),
+											(int) cbDia.getSelectedItem()),
+									(int) cbHora.getSelectedItem(), (int) cbMinuto.getSelectedItem(), "PENDIENTE");
+							tdb.addTransportes(transporte);
+							for (Producto p : transportes) {
+								vdb.updateTransporteMontaje(p, venta, 1, 0);
 							}
+							for (Producto p : montajes) {
+								vdb.updateTransporteMontaje(p, venta, 1, 1);
+							}
+							dispose();
 						} else
 							JOptionPane.showMessageDialog(frame, "No has seleccionado ningún transportista");
 					} else
@@ -561,6 +557,7 @@ public class VentanaMontar extends JFrame {
 		}
 		return spAño;
 	}
+	
 	private JLabel getLblFecha() {
 		if (lblFecha == null) {
 			lblFecha = new JLabel("Fecha:");
