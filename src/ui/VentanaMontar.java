@@ -8,7 +8,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,6 +40,7 @@ import business.logic.Venta;
 import business.transportes.TransportesDataBase;
 import business.transportistas.TransportistasDataBase;
 import business.ventas.VentaDataBase;
+import util.Claves;
 
 public class VentanaMontar extends JFrame {
 
@@ -504,7 +507,6 @@ public class VentanaMontar extends JFrame {
 		if (btnSiguiente == null) {
 			btnSiguiente = new JButton("Siguiente");
 			btnSiguiente.addActionListener(new ActionListener() {
-				@SuppressWarnings("deprecation")
 				public void actionPerformed(ActionEvent e) {
 					Transportista[] transportistas = getTransportistas();
 					if (transportistas.length > 0) {
@@ -516,12 +518,15 @@ public class VentanaMontar extends JFrame {
 							TransportesDataBase tdb = new TransportesDataBase(db);
 							VentaDataBase vdb = new VentaDataBase(db);
 							int id = tdb.getNumeroTransportes() + 1;
-							Date fecha = new Date((int) getSpAño().getValue(), (int) cbMes.getSelectedItem(),
-									(int) cbDia.getSelectedItem());
-							if (fecha.getDay() == 0) {
+							Date fecha = Date.valueOf(LocalDate.of((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem(),
+									(Integer) getCbDia().getSelectedItem()));
+							Calendar cal = Calendar.getInstance();
+						    cal.setTime(fecha);
+						    int day = cal.get(Calendar.DAY_OF_WEEK);
+							if (day == Calendar.SUNDAY) {
 								JOptionPane.showMessageDialog(frame, "No se puede transportar un domingo");
 							} else {
-								Transporte transporte = new Transporte(String.valueOf(id), venta.getVenta_Id(),
+								Transporte transporte = new Transporte(Claves.toClave(id), venta.getVenta_Id(),
 										tr.getDni(), fecha, (int) cbHora.getSelectedItem(),
 										(int) cbMinuto.getSelectedItem(), "PENDIENTE");
 								tdb.addTransportes(transporte);
@@ -546,6 +551,7 @@ public class VentanaMontar extends JFrame {
 		}
 		return btnSiguiente;
 	}
+	
 
 	private Transportista[] getTransportistas() {
 		TransportistasDataBase tdb = new TransportistasDataBase(db);
@@ -557,7 +563,7 @@ public class VentanaMontar extends JFrame {
 	private JSpinner getSpAño() {
 		if (spAño == null) {
 			spAño = new JSpinner();
-			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(2020), 0, null, Integer.valueOf(50)));
+			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(2020), 0, null, Integer.valueOf(1)));
 		}
 		return spAño;
 	}

@@ -1,8 +1,8 @@
 package util;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.Properties;
-import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -21,12 +21,15 @@ public class Correo {
         propiedad.setProperty("mail.smtp.port", "587");
         propiedad.setProperty("mail.smtp.auth", "true");
         
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        
         Session sesion = Session.getDefaultInstance(propiedad);
         String correoEnvia = "muebleriaips@gmail.com";
         String contrasena = "soyadmin";
         String receptor = correo;
         String asunto = "Transporte pedido";
-        String mensaje= "Su transporte ha pasado de pendiente a en tránsito, el transporte le llegará el " + date.toString();
+        String mensaje= "Su transporte ha pasado de pendiente a en tránsito, el transporte le llegará el " + cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
         
         MimeMessage mail = new MimeMessage(sesion);
         

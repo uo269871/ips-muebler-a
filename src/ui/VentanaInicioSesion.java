@@ -8,13 +8,22 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
+import business.empleados.EmpleadosDataBase;
+import business.logic.Empleado;
+import business.logic.Transportista;
+import business.logic.Vendedor;
+import business.transportistas.TransportistasDataBase;
+import business.vendedores.VendedoresDataBase;
+
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class VentanaInicioSesion extends JFrame {
@@ -41,7 +50,7 @@ public class VentanaInicioSesion extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public void run(DataBase db) {
+	public static void run(DataBase db) {
 		try {
 			VentanaInicioSesion frame = new VentanaInicioSesion(db);
 			frame.setVisible(true);
@@ -126,12 +135,41 @@ public class VentanaInicioSesion extends JFrame {
 	private JButton getBtnInicio() {
 		if (btnInicio == null) {
 			btnInicio = new JButton("Iniciar sesi\u00F3n");
+			btnInicio.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					EmpleadosDataBase edb = new EmpleadosDataBase(db);
+					if(edb.checkPassword(getTxtUsuario().getText(), String.valueOf(getPassContraseña().getPassword()))) {
+						VentanaPrincipal.run(db);
+					}
+					else {
+						JOptionPane.showConfirmDialog(null, "Usuario y contreseña incorrectos");
+					}
+				}
+			});
 			btnInicio.setFont(new Font("Dialog", Font.BOLD, 14));
 			btnSalir.setForeground(Color.BLACK);
 			btnSalir.setBackground(Color.LIGHT_GRAY);
 		}
 		return btnInicio;
 	}
+	
+	/*private void checkTipo(Empleado e) {
+		TransportistasDataBase tdb = new TransportistasDataBase(db);
+		List<Transportista> trans = tdb.getTransportistas();
+		for (Transportista t : trans) {
+			if (t.getId().equals(e.getId())) {
+				VentanaTransportista.run(db);
+			}
+		}
+		VendedoresDataBase vdb = new VendedoresDataBase(db);
+		List<Vendedor> vends = vdb.getVendedores();
+		for (Vendedor v : vends) {
+			if (v.getId().equals(e.getId())) {
+				VentanaPrincipal.run(db);;
+			}
+		}
+	}*/
+	
 	private JTextField getTxtUsuario() {
 		if (txtUsuario == null) {
 			txtUsuario = new JTextField();

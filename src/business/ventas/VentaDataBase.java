@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import business.bbdd.DataBase;
@@ -78,6 +79,30 @@ public class VentaDataBase{
 				Date fecha = rs.getDate("fecha_entrega");
 				Venta v = new Venta(venta_id, client_id, fecha);
 				ventas.add(v);
+			}
+//			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+
+		return ventas;
+	}
+	
+	public List<Venta> getVentas(int year, int month) {
+		List<Venta> ventas = new ArrayList<Venta>();
+		try {
+			Statement pst = db.getConnection().createStatement();
+			ResultSet rs = pst.executeQuery("select * from ips_ventas");
+			while (rs.next()) {
+				String venta_id = rs.getString("venta_id");
+				String client_id = rs.getString("client_id");
+				Date fecha = rs.getDate("fecha_entrega");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(fecha);
+				if ((cal.get(Calendar.MONTH) + 1) == month && cal.get(Calendar.YEAR) == year) {
+					Venta v = new Venta(venta_id, client_id, fecha);
+					ventas.add(v);
+				}
 			}
 //			db.cierraConexion();
 		} catch (SQLException e) {

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -26,9 +27,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import business.bbdd.DataBase;
 import business.catalogo.CatalogoDataBase;
+import business.logic.Pedido;
 import business.logic.Producto;
 import business.logic.Venta;
+import business.pedidos.PedidosDataBase;
 import business.ventas.VentaDataBase;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VentanaBalance extends JFrame {
 
@@ -110,6 +115,11 @@ public class VentanaBalance extends JFrame {
 	private JButton getBtnSalir() {
 		if (btnSalir == null) {
 			btnSalir = new JButton("Salir");
+			btnSalir.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
 		}
 		return btnSalir;
 	}
@@ -150,9 +160,11 @@ public class VentanaBalance extends JFrame {
 			cbMes = new JComboBox<Integer>();
 			cbMes.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					panelBalance = new ChartPanel(getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
 				}
 			});
 			cbMes.setModel(new DefaultComboBoxModel<Integer>(getMeses()));
+			cbMes.setSelectedItem(LocalDate.now().getMonthValue());
 		}
 		return cbMes;
 	}
@@ -177,38 +189,44 @@ public class VentanaBalance extends JFrame {
 	private JSpinner getSpAño() {
 		if (spAño == null) {
 			spAño = new JSpinner();
-			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(2020), 0, null, Integer.valueOf(1)));
+			spAño.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					panelBalance = new ChartPanel(getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
+				}
+			});
+			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(LocalDate.now().getYear()), 0, null, Integer.valueOf(1)));
 		}
 		return spAño;
 	}
 
 	private ChartPanel getPanelBalance() {
 		if (panelBalance == null) {
-			panelBalance = new ChartPanel(getGrafico());
+			panelBalance = new ChartPanel(getGrafico((Integer) getSpAño().getValue(), (Integer) getCbMes().getSelectedItem()));
 
 		}
 		return panelBalance;
 	}
 
-	private JFreeChart getGrafico() {
+	private JFreeChart getGrafico(int year, int month) {
 		int[] array = new int[3];
-		array[0] = getBeneficios();
-		array[1] = 6;
-		array[2] = 7;
+		array[0] = getBeneficios(year, month);
+		array[1] = getPerdidas();
+		array[2] = getBeneficios(year, month) - getPerdidas();
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		String serie = "Numeros";
-		for (int i = 0; i < array.length; i++)
-			dataset.addValue(array[i], serie, "" + i);
-		JFreeChart chart = ChartFactory.createBarChart("Repeticion de randoms", null, null, dataset,
+		dataset.addValue(array[0], "€", "Beneficios");
+		dataset.addValue(array[1], "€", "Pérdidas");
+		dataset.addValue(array[2], "€", "Total");
+		JFreeChart chart = ChartFactory.createBarChart("Balance", null, null, dataset,
 				PlotOrientation.VERTICAL, true, true, false);
 		return chart;
 	}
 	
-	private int getBeneficios() {
+	private int getBeneficios(int year, int month) {
 		int ben = 0;
 		VentaDataBase vdb = new VentaDataBase(db);
 		CatalogoDataBase cdb = new CatalogoDataBase(db);
-		List<Venta> ventas = vdb.getVentas();
+		List<Venta> ventas = vdb.getVentas(year, month);
 		for (Venta v : ventas) {
 			List<Producto> productos = vdb.getProductos(v.getVenta_Id());
 			for (Producto p : productos) {
@@ -219,5 +237,16 @@ public class VentanaBalance extends JFrame {
 		}
 		
 		return ben;
+	}
+	
+	private int getPerdidas() {
+		int per = 0;
+		PedidosDataBase pdb = new PedidosDataBase(db);
+		List<Pedido> pedidos = pdb.getPedidos();
+		for (Pedido p : pedidos) {
+			per += p.getTotal_price();
+		}
+		
+		return per;
 	}
 }

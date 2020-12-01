@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -24,12 +25,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import business.bbdd.DataBase;
-import business.clientes.ClientesDataBase;
-import business.logic.Cliente;
 import business.logic.Transporte;
-import business.logic.Venta;
 import business.transportes.TransportesDataBase;
-import business.ventas.VentaDataBase;
 import util.Correo;
 
 public class VentanaEstado extends JFrame {
@@ -62,7 +59,7 @@ public class VentanaEstado extends JFrame {
 	private JPanel panelTransporte;
 	private JLabel Transporte;
 	private JComboBox<Transporte> cbTransporte;
-	
+
 	private Correo correo = new Correo();
 
 	/**
@@ -92,10 +89,10 @@ public class VentanaEstado extends JFrame {
 		contentPane.add(getPanelCentro(), BorderLayout.CENTER);
 		contentPane.add(getPanelSur(), BorderLayout.SOUTH);
 		checkEstado();
-		
+
 	}
-	
-	private Cliente getCliente() {
+
+	/*private Cliente getCliente() {
 		VentaDataBase vdb = new VentaDataBase(db);
 		ClientesDataBase cdb = new ClientesDataBase(db);
 		String id = "";
@@ -114,7 +111,7 @@ public class VentanaEstado extends JFrame {
 			}
 		}
 		return null;
-	}
+	}*/
 
 	private JPanel getPanelNorte() {
 		if (panelNorte == null) {
@@ -207,14 +204,15 @@ public class VentanaEstado extends JFrame {
 		return lblAño;
 	}
 
-	@SuppressWarnings("deprecation")
 	private JSpinner getSpAño() {
 		if (spAño == null) {
 			spAño = new JSpinner();
 			spAño.setEnabled(false);
 			spAño.setBounds(186, 0, 92, 29);
 			spAño.setModel(new SpinnerNumberModel(Integer.valueOf(2020), 0, null, Integer.valueOf(1)));
-			spAño.setValue(transporte.getDia_entrega().getYear());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(transporte.getDia_entrega());
+			spAño.setValue(cal.get(Calendar.YEAR));
 		}
 		return spAño;
 	}
@@ -229,7 +227,6 @@ public class VentanaEstado extends JFrame {
 		return lblMes;
 	}
 
-	@SuppressWarnings("deprecation")
 	private JComboBox<Integer> getCbMes() {
 		if (cbMes == null) {
 			cbMes = new JComboBox<Integer>();
@@ -242,7 +239,9 @@ public class VentanaEstado extends JFrame {
 			cbMes.setEnabled(false);
 			cbMes.setBounds(370, 0, 92, 29);
 			cbMes.setModel(new DefaultComboBoxModel<Integer>(getMeses()));
-			cbMes.setSelectedItem(transporte.getDia_entrega().getMonth());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(transporte.getDia_entrega());
+			cbMes.setSelectedItem(cal.get(Calendar.MONTH));
 		}
 		return cbMes;
 	}
@@ -265,14 +264,15 @@ public class VentanaEstado extends JFrame {
 		return lblDia;
 	}
 
-	@SuppressWarnings("deprecation")
 	private JComboBox<Integer> getCbDia() {
 		if (cbDia == null) {
 			cbDia = new JComboBox<Integer>();
 			cbDia.setEnabled(false);
 			cbDia.setBounds(554, 0, 92, 29);
 			cbDia.setModel(new DefaultComboBoxModel<Integer>(getDias()));
-			cbDia.setSelectedItem(transporte.getDia_entrega().getDate());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(transporte.getDia_entrega());
+			cbDia.setSelectedItem(cal.get(Calendar.DAY_OF_MONTH));
 		}
 		return cbDia;
 	}
@@ -329,31 +329,40 @@ public class VentanaEstado extends JFrame {
 		if (btnCambiarEstado == null) {
 			btnCambiarEstado = new JButton("Cambiar Estado");
 			btnCambiarEstado.addActionListener(new ActionListener() {
-				@SuppressWarnings("deprecation")
 				public void actionPerformed(ActionEvent e) {
 					if (transporte.getEstado().equals("PENDIENTE")) {
 						transporte.setEstado("EN TRANSITO");
 						txEstado.setText(transporte.getEstado());
 						TransportesDataBase tdb = new TransportesDataBase(db);
 						tdb.updateEstado(transporte, transporte.getEstado());
-						correo.sendEmail(getCliente().getEmail(), new Date((int) spAño.getValue(), (int) cbMes.getSelectedItem(),
-								(int) cbDia.getSelectedItem()));
+						correo.sendEmail("uo271033@uniovi.es",
+								Date.valueOf(LocalDate.of((Integer) getSpAño().getValue(),
+										(Integer) getCbMes().getSelectedItem(),
+										(Integer) getCbDia().getSelectedItem())));
 					} else if (transporte.getEstado().equals("EN TRANSITO")) {
 						transporte.setEstado("ENTREGADO");
 						txEstado.setText(transporte.getEstado());
 						TransportesDataBase tdb = new TransportesDataBase(db);
 						tdb.updateEstado(transporte, transporte.getEstado());
 					} else if (transporte.getEstado().equals("RETRASADO")) {
-						transporte.setEstado("PENDIENTE");
-						txEstado.setText(transporte.getEstado());
-						transporte.setDia_entrega(new Date((int) spAño.getValue(), (int) cbMes.getSelectedItem(),
-								(int) cbDia.getSelectedItem()));
-						spAño.setEnabled(false);
-						cbDia.setEnabled(false);
-						cbMes.setEnabled(false);
-						TransportesDataBase tdb = new TransportesDataBase(db);
-						tdb.updateEstado(transporte, transporte.getEstado());
-						tdb.updateFecha(transporte, transporte.getDia_entrega());
+						Calendar cal = Calendar.getInstance();
+					    cal.setTime(Date.valueOf(LocalDate.of((Integer) getSpAño().getValue(),
+								(Integer) getCbMes().getSelectedItem(), (Integer) getCbDia().getSelectedItem())));
+					    int day = cal.get(Calendar.DAY_OF_WEEK);
+						if (day == Calendar.SUNDAY) {
+							JOptionPane.showMessageDialog(null, "No se puede transportar un domingo");
+						} else {
+							transporte.setEstado("PENDIENTE");
+							txEstado.setText(transporte.getEstado());
+							transporte.setDia_entrega(Date.valueOf(LocalDate.of((Integer) getSpAño().getValue(),
+									(Integer) getCbMes().getSelectedItem(), (Integer) getCbDia().getSelectedItem())));
+							spAño.setEnabled(false);
+							cbDia.setEnabled(false);
+							cbMes.setEnabled(false);
+							TransportesDataBase tdb = new TransportesDataBase(db);
+							tdb.updateEstado(transporte, transporte.getEstado());
+							tdb.updateFecha(transporte, transporte.getDia_entrega());
+						}
 					}
 				}
 			});
@@ -386,20 +395,24 @@ public class VentanaEstado extends JFrame {
 		if (cbTransporte == null) {
 			cbTransporte = new JComboBox<Transporte>();
 			cbTransporte.addActionListener(new ActionListener() {
-				@SuppressWarnings("deprecation")
 				public void actionPerformed(ActionEvent e) {
 					transporte = (Transporte) cbTransporte.getSelectedItem();
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(transporte.getDia_entrega());
 					if (spAño != null && cbMes != null && cbDia != null) {
-						spAño.setValue(transporte.getDia_entrega().getYear());
-						cbMes.setSelectedItem(transporte.getDia_entrega().getMonth());
-						cbDia.setSelectedItem(transporte.getDia_entrega().getDate());
+						spAño.setValue(cal.get(Calendar.YEAR));
+						cbMes.setSelectedItem(cal.get(Calendar.MONTH));
+						cbDia.setSelectedItem(cal.get(Calendar.DAY_OF_MONTH));
 						txEstado.setText(transporte.getEstado());
 					}
+					checkEstado();
 				}
 			});
 			cbTransporte.setModel(new DefaultComboBoxModel<Transporte>(getTransportes()));
 			cbTransporte.setSelectedIndex(0);
 			transporte = (Transporte) cbTransporte.getSelectedItem();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(transporte.getDia_entrega());
 		}
 		return cbTransporte;
 	}
@@ -412,8 +425,8 @@ public class VentanaEstado extends JFrame {
 	}
 
 	private void checkEstado() {
-		if (LocalDate.now().isAfter(
-				LocalDate.of((int) spAño.getValue(), (int) cbMes.getSelectedItem(), (int) cbDia.getSelectedItem()))) {
+		if (LocalDate.now().isAfter(LocalDate.of((Integer) getSpAño().getValue(),
+				(Integer) getCbMes().getSelectedItem(), (Integer) getCbDia().getSelectedItem()))) {
 			transporte.setEstado("RETRASADO");
 			txEstado.setText(transporte.getEstado());
 			JOptionPane.showConfirmDialog(getParent(), "¡Transporte retrasado!\nSeleccione una nueva fecha de entrega");
@@ -425,6 +438,4 @@ public class VentanaEstado extends JFrame {
 		}
 	}
 
-	
-	 
 }

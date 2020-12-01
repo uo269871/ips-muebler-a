@@ -4,7 +4,7 @@
 package business;
 
 import business.bbdd.DataBase;
-import ui.VentanaPrincipal;
+import ui.VentanaInicioSesion;
 
 /**
  * @author uo270656
@@ -16,8 +16,8 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DataBase db=new DataBase(2);
-		VentanaPrincipal.run(db);
+		DataBase db=new DataBase(1);
+		VentanaInicioSesion.run(db);
 	}
 
 }

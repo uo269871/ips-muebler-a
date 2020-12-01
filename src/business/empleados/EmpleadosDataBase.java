@@ -131,4 +131,50 @@ public class EmpleadosDataBase {
 			System.out.println("Error while operating the database " + e.getMessage());
 		}
 	}
+	
+	public boolean checkPassword(String usuario, String password) {
+		String pass = "";
+		try {
+			PreparedStatement pst = db.getConnection().prepareStatement("SELECT PASSWORD FROM  IPS_EMPLEADOS WHERE USUARIO = ?");
+			pst.setString(1, usuario);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				pass = rs.getString("PASSWORD");
+			}
+			rs.close();
+			pst.close();
+//			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return pass.equals(password);
+	}
+	
+	public Empleado getEmpleado(String usuario) {
+		Empleado em = null;
+		try {
+			Statement st = db.getConnection().createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM  IPS_EMPLEADOS WHERE USUARIO = ?");
+			if (rs.next()) {
+				String id = rs.getString("id");
+				String dni = rs.getString("dni");
+				String nombre = rs.getString("nombre");
+				String dir = rs.getString("direccion");
+				int telefono = rs.getInt("telefono");
+				int hora_entrada = rs.getInt("hora_entrada");
+				int minuto_entrada = rs.getInt("minuto_entrada");
+				int hora_salida = rs.getInt("hora_salida");
+				int minuto_salida = rs.getInt("minuto_salida");
+				em = new Empleado(id, dni, nombre, dir, telefono, hora_entrada, minuto_entrada, hora_salida,
+						minuto_salida);
+			}
+			rs.close();
+			st.close();
+//			db.cierraConexion();
+		} catch (SQLException e) {
+			System.out.println("Error while operating the database " + e.getMessage());
+		}
+		return em;
+	}
+	
 }
