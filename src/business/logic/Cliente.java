@@ -21,6 +21,14 @@ public class Cliente {
 		this.email=email;
 	}
 	
+	public Cliente(String name, String dni, String client_id, String address) {
+		super();
+		this.name = name;
+		this.dni = dni;
+		this.client_id = client_id;
+		this.address = address;
+	}
+	
 	public Cliente() {
 		super();
 	}
